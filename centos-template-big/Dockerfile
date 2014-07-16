@@ -17,7 +17,13 @@ RUN useradd admin -G wheel && \
     mkdir -p /home/admin/.ssh
 ADD authorized_keys /home/admin/.ssh/
 RUN chown -R admin:admin /home/admin/.ssh && chmod 700 /home/admin/.ssh
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
+RUN sed -i \
+  -e 's/^UsePAM yes/#UsePAM yes/g' \
+  -e 's/^#UsePAM no/UsePAM no/g' \
+  -e 's/^PasswordAuthentication yes/PasswordAuthentication no/g' \
+  -e 's/^#PermitRootLogin yes/PermitRootLogin no/g' \
+  -e 's/^#UseDNS yes/UseDNS no/g' \
+  /etc/ssh/sshd_config
 
 ADD run /run
 RUN chmod 755 /run
