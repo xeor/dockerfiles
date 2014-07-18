@@ -8,4 +8,4 @@
 * Run: docker run -i -t -p 3000:3000 --rm tagname
 
 # Info
-* centos base image
+* centos7 base image
