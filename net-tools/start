@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "
+Tools available:
+  * curl wget tmux tar unzip
+  * iputils iproute net-tools bind-utils
+  * nmap nc iptraf-ng mtr tcpdump
+"
+
+echo "Your IP's:"
+ip a s eth0 | awk '/inet/ { print $2}'
+
+echo
+echo "This container should be started with --net=host to run on the hosts network card.."
+
+$*
