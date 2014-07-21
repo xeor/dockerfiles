@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "
+Tools available:
+  * Python (with pip and ipython) and Node (with npm)
+  * strace curl wget tmux diffstat emacs (nox)
+  * git mercurial subversion
+  * tar unzip make
+"
+
+$*

@@ -30,4 +30,8 @@ RUN cd /setup && \
 VOLUME /data
 WORKDIR /data
 
+ADD start /start
+RUN chmod +x /start
+ENTRYPOINT ["/start"]
 CMD ["bash", "-l"]
+
