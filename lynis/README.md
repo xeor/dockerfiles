@@ -1,4 +1,5 @@
 * Lynis is a free and opensource auditing tool from Cisofy (with an enterprise brother), located at http://cisofy.com/lynis/
+* NOTE / WARNING: This container is just for fun, and it works very poorly right now. Lynis doesnt have a --root-dir option, and Docker have a hard time mounting / as a volume.. So some dirty hacks just to get it going somehow to scan the host OS, not the docker container itself..
 
 # Controll
 * Build it: docker built -t tagname .
