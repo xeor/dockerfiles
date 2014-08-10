@@ -6,7 +6,8 @@ RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-
 
 RUN yum install -y strace curl wget vim emacs-nox diffstat tmux \
                    git mercurial subversion \
-                   tar unzip make
+                   tar unzip make \
+                   postgresql
 
 # Python stuff
 ADD requirements.txt ./
