@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function die {
+  echo "ERROR: ${1}"
+  exit 1
+}
+
+function check_needed_variables {
+  echo -n "Checking for needed variables..."
+  [[ -> ${DOMAIN} ]] && die "No DOMAIN specified"
+  [[ -> ${DOMAIN_API_TOKEN} ]] && die "No DOMAIN_API_TOKEN specified"
+  [[ -> ${RECORD_ID} ]] && die "No RECORD_ID specified"
+  [[ -> ${UPDATE_TIMER} ]] && die "No UPDATE_TIMER specified"
+  echo -n "done"
+  echo
+}
+
+function update_loop {
+  while true; do
+    echo "Checking"
+
+    IP="`curl http://jsonip.com | sed 's/{"ip":"\(.*\)"/\1/g' | sed 's/}//'`"
+    curl -H "Accept: application/json" \
+      -H "Content-Type: application/json" \
+      -H "X-DNSimple-Domain-Token: ${DOMAIN_API_TOKEN}" \
+      -X "PUT" \
+      -i "https://api.dnsimple.com/v1/domains/${DOMAIN}/records/${RECORD_ID}" \
+      -d "{\"record\":{\"content\":\"${IP}\"}}"
+    sleep ${UPDATE_TIMER}
+  done
+}
+
+case ${1} in
+  start)
+    check_needed_variables
+    update_loop
+    ;;
+
+  *)
+    ${1}
+    ;;
+esac
