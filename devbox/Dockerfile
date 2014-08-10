@@ -6,7 +6,7 @@ ENV REFRESHED_AT 2014-08-10
 RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
 
 RUN yum install -y strace curl wget vim emacs-nox diffstat tmux \
-                   git mercurial subversion \
+                   git mercurial \
                    tar unzip make \
                    postgresql
 
