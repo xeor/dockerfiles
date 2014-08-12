@@ -17,9 +17,7 @@ function check_needed_variables {
 
 function update_loop {
   while true; do
-    echo "Checking"
-
-    IP="`curl http://jsonip.com | sed 's/{"ip":"\(.*\)"/\1/g' | sed 's/}//'`"
+    IP=$(curl http://jsonip.com | sed 's/{"ip":"\(.*\)"/\1/g' | sed 's/}//')
     curl -H "Accept: application/json" \
       -H "Content-Type: application/json" \
       -H "X-DNSimple-Domain-Token: ${DOMAIN_API_TOKEN}" \

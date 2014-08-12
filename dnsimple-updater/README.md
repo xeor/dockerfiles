@@ -1,3 +1,5 @@
+This is a fairly dumb container, so test it first :)
+
 # Run
 
 ## Needed environment variables
