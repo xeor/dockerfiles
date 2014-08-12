@@ -24,7 +24,7 @@ function setup {
     name=$(echo $i | sed -n 's/^\([A-Z-]*\).*$/\1/p' | tr "A-Z" "a-z")
     ip_and_port=$(echo $i | sed -n 's/^.*tcp:\/\/\(.*$\)/\1/p')
     echo ${ip_and_port} | grep -q :80$ || continue
-    echo "location /${name}/ { proxy_pass http://${ip_and_port}/;" >> /sites.conf
+    echo "location /${name}/ { proxy_pass http://${ip_and_port}/; }" >> /sites.conf
   done
 
   if [ ! -e "/sites.conf" ]; then die "Need at least 1 linked service on port 80"; fi
