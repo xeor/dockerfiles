@@ -1,0 +1,44 @@
+#!/bin/bash
+
+function die {
+  echo "ERROR: ${1}"
+  exit 1
+}
+
+function check_depending_variables {
+  echo -n "Checking depending container connections "
+  [[ -> $SITE_URL ]] && die "No SITE_URL defined"
+  [[ -> $ADMIN_MAIL ]] && die "No ADMIN_MAIL defined"
+  echo -n "[done]"
+  echo
+}
+
+function setup {
+  source /wwwhisper/virtualenv/bin/activate && /wwwhisper/add_site_config.py --site-url ${SITE_URL} --admin-email ${ADMIN_MAIL}
+  #site_name=$(python -c "from urlparse import urlparse; print urlparse(\"${SITE_URL}\").hostname") # Better than an ugly sed/awk/grep thingy :)
+  #sed "s/__SERVER_NAME__/${site_name}/g" -i /usr/local/nginx/conf/nginx.conf
+  site_path=$(ls -d /wwwhisper/sites/*)
+  sed "s@__SITE_PATH__@${site_path}@g" -i /usr/local/nginx/conf/nginx.conf
+
+  for i in $(env | grep "_PORT=tcp://"); do
+    name=$(echo $i | sed -n 's/^\([A-Z-]*\).*$/\1/p' | tr "A-Z" "a-z")
+    ip_and_port=$(echo $i | sed -n 's/^.*tcp:\/\/\(.*$\)/\1/p')
+    echo ${ip_and_port} | grep -q :80$ || continue
+    echo "location /${name}/ { proxy_pass http://${ip_and_port}/;" >> /sites.conf
+  done
+
+  if [ ! -e "/sites.conf" ]; then die "Need at least 1 linked service on port 80"; fi
+}
+
+check_depending_variables
+setup
+chown -R wwwhisper:www-data /wwwhisper
+
+case ${1} in
+  start)
+    supervisord -c /supervisord.conf
+    ;;
+  *)
+    ${1}
+    ;;
+esac
