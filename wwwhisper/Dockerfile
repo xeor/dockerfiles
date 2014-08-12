@@ -23,6 +23,7 @@ RUN cd / && git clone https://github.com/wrr/wwwhisper.git && cd wwwhisper && vi
 
 ADD supervisord.conf /supervisord.conf
 ADD nginx.conf /usr/local/nginx/conf/nginx.conf
+ADD index.html /usr/local/nginx/html/index.html
 
 ADD start /start
 RUN chmod 755 /start
