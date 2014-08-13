@@ -1,12 +1,16 @@
 FROM centos:centos7
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
+ENV REFRESHED_AT 2014-08-10-b
 
 RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
 
+#RUN yum update -y && yum clean all
 RUN yum install -y strace curl wget vim emacs-nox diffstat tmux \
-                   git mercurial subversion \
-                   tar unzip make
+                   git mercurial \
+                   tar unzip make \
+                   postgresql && \
+                   yum clean all
 
 # Python stuff
 ADD requirements.txt ./
