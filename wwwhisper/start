@@ -25,7 +25,13 @@ function setup {
     name=$(echo $i | sed -n 's/^\([A-Z-]*\).*$/\1/p' | tr "A-Z" "a-z")
     ip_and_port=$(echo $i | sed -n 's/^.*tcp:\/\/\(.*$\)/\1/p')
     echo ${ip_and_port} | grep -q :80$ || continue
-    echo "location /${name}/ { proxy_pass http://${ip_and_port}/; }" >> /sites.conf
+    echo "location /${name}/ { proxy_pass http://${ip_and_port}; proxy_set_header Host \$host; }" >> /sites.conf
+
+location /git/ {
+  proxy_pass http://172.17.0.232:80/git/;
+  proxy_set_header Host $host;
+}
+
     link_list="${link_list}<li><a href=\"./${name}/\">${name}</a></li>"
   done
 
