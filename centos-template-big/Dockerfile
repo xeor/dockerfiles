@@ -27,7 +27,7 @@ RUN sed -i \
 
 ADD run /run
 RUN chmod 755 /run
-ENTRYPOINT ["/bin/bash", "-e", "/run"]
+ENTRYPOINT ["/bin/bash", "-e", "/start"]
 CMD ["start"]
 
 EXPOSE 22
