@@ -21,7 +21,7 @@ function setup {
   sed "s@__SITE_PATH__@${site_path}@g" -i /usr/local/nginx/conf/nginx.conf
 
   link_list=""
-  for i in $(env | grep "_PORT=tcp://"); do
+  for i in $(env | grep "_PORT_80_TCP=tcp://"); do
     name=$(echo $i | sed -n 's/^\([A-Z-]*\).*$/\1/p' | tr "A-Z" "a-z")
     ip_and_port=$(echo $i | sed -n 's/^.*tcp:\/\/\(.*$\)/\1/p')
     echo ${ip_and_port} | grep -q :80$ || continue
