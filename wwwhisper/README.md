@@ -11,6 +11,7 @@ Example, if you start this container with:
 It will create a web resource that shares port 80 on the container named gitlab_1 under admin.your.domain/git protected by wwwhisper and with your@mail.com as the admin account.
 If you link several containers, they will all be setup as reverse proxy resources as long as they export port 80.
 
+If you want to keep your settings after container exit, mount the data volume on your host with something like `-v datadir-on-host:/wwwhisper/sites`
 
 # admin #
 Is available via /wwwhisper/admin/
