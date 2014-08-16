@@ -14,9 +14,11 @@ function check_depending_variables {
 }
 
 function setup {
-  source /wwwhisper/virtualenv/bin/activate && /wwwhisper/add_site_config.py --site-url ${SITE_URL} --admin-email ${ADMIN_MAIL}
-  #site_name=$(python -c "from urlparse import urlparse; print urlparse(\"${SITE_URL}\").hostname") # Better than an ugly sed/awk/grep thingy :)
-  #sed "s/__SERVER_NAME__/${site_name}/g" -i /usr/local/nginx/conf/nginx.conf
+  source /wwwhisper/virtualenv/bin/activate
+
+  # add_site_config barfs if the directory exists, which happens if we use the sites directory as a mount to keep the configs on container recreation
+  /wwwhisper/add_site_config.py --site-url ${SITE_URL} --admin-email ${ADMIN_MAIL} || true
+
   site_path=$(ls -d /wwwhisper/sites/*)
   sed "s@__SITE_PATH__@${site_path}@g" -i /usr/local/nginx/conf/nginx.conf
 
