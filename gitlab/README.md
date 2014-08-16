@@ -1,3 +1,10 @@
+# NOTE (deprecated)
+There is no need to use this hack anymore. Literally the next day, after making this, the original project made the needed variables available though config.
+
+I'l keep this project around just because it’s a nice hack and it will work on other projects as well. But for this exact project, read their documentation about how to enable Google authentication without hacks :)
+
+# Old README
+
 The (currently) only purpose of this container is to support Google oauth2 for the gitlab container sameersbn makes.
 Its a little dirty, and eventually this should be in the sameersbn/gitlab repo instead.
 
