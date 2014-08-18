@@ -16,14 +16,14 @@ This is the container with nginx. This needs to read some of its nginx configura
 If it sees that the dynamic nginx config have been changed, it will reload the nginx daemon.
 To run it, you will need something like:
 
-    docker run -i -t -p 80:80 -p 443:443 --volumes-from=nginx-proxy-watcher -v $PWD/certificates:/certificates xeor/nginx-proxy-forwarder
+    docker run -i -t -p 80:80 -p 443:443 --volumes-from=nginx-proxy-watcher -v $PWD/certificates:/certificates xeor/nginx-proxy-m-forwarder
 
 # nginx-proxy-watcher #
 This is the container in charge of generating the dynamic nginx configuration we the other container uses. It shares this over a volume.
 To do this, it needs access to the docker.sock file, and thats why we separate this containers.
 To run it, you need something like:
 
-    docker run -i -t -v /var/run/docker.sock:/docker.sock --name=nginx-proxy-watcher xeor/nginx-proxy-watcher
+    docker run -i -t -v /var/run/docker.sock:/docker.sock --name=nginx-proxy-watcher xeor/nginx-proxy-m-watcher
 
 # The other containers with web resources #
 To add a virtual host, just add VIRTUAL_HOST as an environment variables to the containers you want shared and the proxy will detect them and start sending traffic to them if the domain matches..
