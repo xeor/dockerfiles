@@ -25,6 +25,8 @@ To run it, you need something like:
 
     docker run -i -t -v /var/run/docker.sock:/docker.sock --name=nginx-proxy-watcher xeor/nginx-proxy-m-watcher
 
+Note that you will need to add `--privileged=true` if you want to mount docker.sock like this when SELinux is enforcing..
+
 # The other containers with web resources #
 To add a virtual host, just add VIRTUAL_HOST as an environment variables to the containers you want shared and the proxy will detect them and start sending traffic to them if the domain matches..
 
