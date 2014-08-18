@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function die {
+  echo "ERROR: ${1}"
+  exit 1
+}
+
+case ${1} in
+  start)
+    monit -I
+    ;;
+  *)
+    ${1}
+    ;;
+esac
