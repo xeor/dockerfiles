@@ -1,0 +1,99 @@
+server {
+	listen 80 default_server;
+	server_name _; # This is just an invalid value which will never trigger on a real hostname.
+	error_log /proc/self/fd/2;
+	access_log /proc/self/fd/1;
+	return 503;
+}
+
+server {
+	listen 443 default_server;
+	server_name _; # This is just an invalid value which will never trigger on a real hostname.
+	error_log /proc/self/fd/2;
+	access_log /proc/self/fd/1;
+
+	ssl on;
+	ssl_certificate /certificates/server.crt;
+	ssl_certificate_key /certificates/server.key;
+	ssl_session_timeout 5m;
+	ssl_protocols SSLv3 TLSv1;
+	ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+	ssl_prefer_server_ciphers on;
+
+	return 503;
+}
+
+{{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
+upstream {{ $host }} {
+
+{{ range $index, $value := $containers }}
+
+	{{ $addrLen := len $value.Addresses }}
+	{{/* If only 1 port exposed, use that */}}
+	{{ if eq $addrLen 1 }}
+		{{ with $address := index $value.Addresses 0 }}
+		   # {{$value.Name}}
+		   server {{ $address.IP }}:{{ $address.Port }};
+		{{ end }}
+
+	{{/* If more than one port exposed, use the one matching VIRTUAL_PORT env var */}}
+	{{ else if $value.Env.VIRTUAL_PORT }}
+		{{ range $i, $address := $value.Addresses }}
+		   {{ if eq $address.Port $value.Env.VIRTUAL_PORT }}
+		   # {{$value.Name}}
+		   server {{ $address.IP }}:{{ $address.Port }};
+		   {{ end }}
+		{{ end }}
+
+	{{/* Else default to standard web port 80 */}}
+	{{ else }}
+		{{ range $i, $address := $value.Addresses }}
+			{{ if eq $address.Port "80" }}
+			# {{$value.Name}}
+			server {{ $address.IP }}:{{ $address.Port }};
+			{{ end }}
+		{{ end }}
+	{{ end }}
+{{ end }}
+}
+
+server {
+	server_name {{ $host }};
+	proxy_buffering off;
+	error_log /proc/self/fd/2;
+	access_log /proc/self/fd/1;
+	return 301 https://$host$request_uri;
+}
+
+server {
+	gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+	listen 443;
+	server_name {{ $host }};
+	proxy_buffering off;
+	error_log /proc/self/fd/2;
+	access_log /proc/self/fd/1;
+
+	ssl on;
+	ssl_certificate /certificates/server.crt;
+	ssl_certificate_key /certificates/server.key;
+	ssl_session_timeout 5m;
+	ssl_protocols SSLv3 TLSv1;
+	ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv3:+EXP;
+	ssl_prefer_server_ciphers on;
+
+	add_header Strict-Transport-Security "max-age=31536000;";
+
+	location / {
+		proxy_pass http://{{ $host }};
+		proxy_http_version 1.1;
+
+		proxy_set_header Connection "";
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto https; # help the backend application differenciate between HTTP/HTTPS
+		proxy_set_header HTTPS on;
+	}
+}
+{{ end }}
