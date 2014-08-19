@@ -15,6 +15,3 @@ If you want to keep your settings after container exit, mount the data volume on
 
 # admin #
 Is available via /wwwhisper/admin/
-
-# Using SSL using a proxy #
-I had some problems with this when SITE_URL started with https. Even tho you are putting this trough a proxy that uses SSL, put http here. Or it might fail.
