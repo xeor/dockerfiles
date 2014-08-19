@@ -10,7 +10,7 @@ For a version of this with separation of the nginx daemon and the config generat
 * Some path changes
 
 # run (proxy) #
-docker run -i -t -p 80:80 -p 443:443 -v /var/run/docker.sock:/docker.sock -v $PWD/certificates:/certificates xeor/nginx-proxy
+docker run -i -t -p 80:80 -p 443:443 -v /var/run/docker.sock:/docker.sock -v $PWD/certificates:/certificates xeor/nginx-proxy-standalone
 
 # run (web-servers) #
 Add VIRTUAL_HOST as an environment variables to them, and the proxy will detect them, add them and forward traffic to them..
