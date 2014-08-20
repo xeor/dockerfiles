@@ -13,7 +13,7 @@ server {
 	access_log /proc/self/fd/1;
 
 	ssl on;
-	ssl_certificate /certificates/server.crt;
+	ssl_certificate /certificates/server.pem;
 	ssl_certificate_key /certificates/server.key;
 	ssl_session_timeout 5m;
 	ssl_protocols SSLv3 TLSv1;
@@ -75,7 +75,7 @@ server {
 	access_log /proc/self/fd/1;
 
 	ssl on;
-	ssl_certificate /certificates/server.crt;
+	ssl_certificate /certificates/server.pem;
 	ssl_certificate_key /certificates/server.key;
 	ssl_session_timeout 5m;
 	ssl_protocols SSLv3 TLSv1;

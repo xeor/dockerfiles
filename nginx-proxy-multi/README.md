@@ -5,6 +5,7 @@ Based on https://github.com/jwilder/nginx-proxy but with some changes:
 * Forces https and will redirect http with a 301. It will also set STS to 1 year.
 * Uses default CMD/ENTRYPOINT for startup, since the containers are simplefied
 * Nginx from source, so its easier to customize and add modules
+* Assume you are using a real certificate and not a self-signed. Not a big config change, but this readme and nginx.tmpl assumes a .pem instead of .crt
 * Some minor nginx config tweeks
 * Some path changes
 
@@ -30,9 +31,10 @@ Note that you will need to add `--privileged=true` if you want to mount docker.s
 # The other containers with web resources #
 To add a virtual host, just add VIRTUAL_HOST as an environment variables to the containers you want shared and the proxy will detect them and start sending traffic to them if the domain matches..
 
-# create self-signed certificates #
-cd certificates
-openssl genrsa -out server.key 2048
-openssl req -new -key server.key -out server.csr
-openssl x509 -req -days 1825 -in server.csr -signkey server.key -out server.crt
+# ssl certificates #
 
+* cd certificates
+* openssl genrsa -out server.key 2048
+* openssl req -new -key server.key -out server.csr
+* // submit server.csr to a certificate authority and they will probably send you a .pem bundle back.
+* // Rename the .pem to server.pem and put it in the same directory
