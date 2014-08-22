@@ -1,8 +1,8 @@
 FROM centos:centos6
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-08-10
-ENV NGINX_VERSION 1.4.4
+ENV REFRESHED_AT 2014-08-21
+ENV NGINX_VERSION 1.6.1
 
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
@@ -14,7 +14,7 @@ RUN yum install -y --enablerepo=centosplus tar git make gcc pcre-devel openssl-d
 RUN wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxvf nginx-${NGINX_VERSION}.tar.gz && \
     cd nginx-${NGINX_VERSION} && \
-    ./configure --with-http_ssl_module --with-http_sub_module --user=www-data --group=www-data --prefix=/usr/local/nginx/ --sbin-path=/usr/local/sbin && \
+    ./configure --with-http_ssl_module --with-http_sub_module --with-http_spdy_module --user=www-data --group=www-data --prefix=/usr/local/nginx/ --sbin-path=/usr/local/sbin && \
     make && make install && touch /usr/local/nginx/conf/generated.conf
 ADD nginx.conf /usr/local/nginx/conf/nginx.conf
 RUN adduser --system www-data
