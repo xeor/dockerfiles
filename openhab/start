@@ -10,7 +10,17 @@ case ${1} in
     # Ripoff from the original run.sh with some changes and without comments:
     #  * Added "-Dgnu.io.rxtx.SerialPorts=/dev/rfxcom:/dev/zwave" to java run
     #  * Hardcoded path to /srv
+    set -x
     cd /srv
+
+    [[ -z ${ADDONS} ]] && die "You need to define some ADDONS"
+
+    mkdir disabled_addons
+    mv addons/*.jar disabled_addons/
+    for addon in ${ADDONS}; do
+      mv disabled_addons/${addon} addons/ || true
+    done
+
     eclipsehome="server";
     HTTP_PORT=8080
     HTTPS_PORT=8443

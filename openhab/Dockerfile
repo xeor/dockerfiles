@@ -1,7 +1,7 @@
-FROM centos:centos6
+# docker run --privileged -i -t -P -v /dev/zwave:/dev/zwave de0ead151f43 bash
 
-MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-08-22
+FROM centos:centos6
+EXPOSE 8080
 
 # EPEL packages
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
@@ -24,16 +24,7 @@ RUN yum localinstall -y \
 
 RUN cp /usr/share/zoneinfo/Europe/Oslo /etc/localtime
 
-# Misc temporary fixes
-#RUN rm -f /srv/addons/org.openhab.binding.zwave-1.5.0-SNAPSHOT.jar
-
-## Handeled by host udev rules since docker wont run udev inside container
-# ADD etc/udev/rules.d/99-zwave.rules /etc/udev/rules.d/99-zwave.rules
-# RUN for i in /dev/ttyUSB*; do udevadm test $(udevadm info --query path --name $i); done
-
 ADD start /start
 RUN chmod 755 /start
 ENTRYPOINT ["/bin/bash", "-e", "/start"]
 CMD ["start"]
-
-EXPOSE 8080

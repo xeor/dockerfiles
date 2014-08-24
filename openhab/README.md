@@ -2,6 +2,9 @@
 echo 'DRIVERS=="usb", ATTRS{manufacturer}=="Silicon Labs", ATTRS{product}=="CP2102 USB to UART Bridge Controller", NAME="zwave", MODE="0666"' > /etc/udev/rules.d/99-zwave.rules
 udevadm trigger
 
+## for more info
+for i in /dev/ttyUSB*; do udevadm test $(udevadm info --query path --name $i); done
+
 # To run
 * --privileged and -v mount the zwave device, or use --device (from Docker 1.2>)
 * --net="host" if you want upnp stuff or similar. Might be needed
