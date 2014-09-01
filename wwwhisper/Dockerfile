@@ -33,4 +33,5 @@ RUN chmod 755 /start
 ENTRYPOINT ["/bin/bash", "-e", "/start"]
 CMD ["start"]
 
+ENV DOCKER_HOST unix:///docker.sock
 EXPOSE 80

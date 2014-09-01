@@ -1,0 +1,7 @@
+{{ range $protectpath, $containers := groupByMulti $ "Env.WWWHIPSTER_PROTECT" "," }}
+
+location /{{ $protectpath }}/ {
+  proxy_pass ??
+
+{{ end }}
+

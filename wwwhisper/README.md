@@ -4,12 +4,12 @@ Simple nginx reverse proxy that hides container services that is linked on port 
 
 # Run #
 
-Example, if you start this container with:
+Start the container with something like:
 
-    docker run -d -e "SITE_URL=http://admin.your.domain" -e "ADMIN_MAIL=your@mail.com" -p 80:80 --link gitlab_1:git xeor/wwwhisper
+    docker run -d -e "SITE_URL=http://admin.your.domain" -e "ADMIN_MAIL=your@mail.com" -p 80:80 -v /var/run/docker.sock:/docker.sock xeor/wwwhisper
 
-It will create a web resource that shares port 80 on the container named gitlab_1 under admin.your.domain/git protected by wwwhisper and with your@mail.com as the admin account.
-If you link several containers, they will all be setup as reverse proxy resources as long as they export port 80.
+For each container you want exposed under admin.your.domain/here, run the other containers with example `-e WWWHIPSTER_PROTECT=here` to expose the containers port 80 under that location.
+This wwwhisper container will detect the new container and automaticly do whats needed.
 
 If you want to keep your settings after container exit, mount the data volume on your host with something like `-v datadir-on-host:/wwwhisper/sites`
 
