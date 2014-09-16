@@ -1,7 +1,27 @@
-{{ range $protectpath, $containers := groupByMulti $ "Env.WWWHIPSTER_PROTECT" "," }}
+{{/* Same as https://github.com/jwilder/nginx-proxy/blob/master/nginx.tmpl, except shortened */}}
 
+{{ range $protectpath, $containers := groupByMulti $ "Env.WWWHISPER_PROTECT" "," }}
 location /{{ $protectpath }}/ {
-  proxy_pass ??
-
+  {{ range $index, $value := $containers }}
+    {{ $addrLen := len $value.Addresses }}
+    {{ if eq $addrLen 1 }}
+      {{ with $address := index $value.Addresses 0 }}
+        proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+      {{ end }}
+    {{ else if $value.Env.WWWHISPER_PORT }}
+      {{ range $i, $address := $value.Addresses }}
+        {{ if eq $address.Port $value.Env.WWWHISPER_PORT }}
+          proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+        {{ end }}
+      {{ end }}
+    {{ else }}
+      {{ range $i, $address := $value.Addresses }}
+        {{ if eq $address.Port "80" }}
+          proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  proxy_set_header Host $host;
+}
 {{ end }}
-

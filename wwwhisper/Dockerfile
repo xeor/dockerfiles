@@ -19,14 +19,15 @@ RUN wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 
 RUN wget https://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz && \
     tar xvzf docker-gen-linux-amd64-0.3.2.tar.gz
-ADD sites.tmpl /
 
 RUN adduser --system www-data && adduser --system -G www-data wwwhisper
 RUN cd / && git clone https://github.com/wrr/wwwhisper.git && cd wwwhisper && virtualenv virtualenv && source virtualenv/bin/activate && pip install -r requirements.txt
 
-ADD supervisord.conf /supervisord.conf
+ADD sites.tmpl /
+ADD index.tmpl /
+ADD supervisord.conf /
+ADD docker-gen.conf /
 ADD nginx.conf /usr/local/nginx/conf/nginx.conf
-ADD index.html /usr/local/nginx/html/index.html
 
 ADD start /start
 RUN chmod 755 /start
