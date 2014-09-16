@@ -7,7 +7,7 @@ function die {
 
 case ${1} in
   start)
-    /etherpad-lite/bin/run.sh --root
+    /usr/bin/node /etherpad-lite/node_modules/ep_etherpad-lite/node/server.js
     ;;
   *)
     ${1}
