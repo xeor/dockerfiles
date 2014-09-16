@@ -7,3 +7,7 @@
 * centos base image
 * Python 3.3
 * ipython
+
+# todo
+* Shared profile directory
+* Start kernel, notebook and consoll at once (need some extra packages and stuff)
