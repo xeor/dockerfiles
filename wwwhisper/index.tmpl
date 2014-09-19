@@ -15,7 +15,9 @@
 <p>If you see this page, you have successfully authenticated. Here is a list of sites I protect. You may or may not have access to them :)</p>
 
 <ul>
-__LINK_LIST__
+{{ range $protectpath, $containers := groupByMulti $ "Env.WWWHISPER_PROTECT" "," }}
+<li><a href="/{{ $protectpath }}/">{{ $protectpath }}</li>
+{{ end }}
 </ul>
 
 </body>
