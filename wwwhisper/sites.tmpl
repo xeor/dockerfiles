@@ -6,18 +6,18 @@ location /{{ $protectpath }}/ {
     {{ $addrLen := len $value.Addresses }}
     {{ if eq $addrLen 1 }}
       {{ with $address := index $value.Addresses 0 }}
-        proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+        proxy_pass http://{{ $address.IP }}:{{ $address.Port }}/;
       {{ end }}
     {{ else if $value.Env.WWWHISPER_PORT }}
       {{ range $i, $address := $value.Addresses }}
         {{ if eq $address.Port $value.Env.WWWHISPER_PORT }}
-          proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+          proxy_pass http://{{ $address.IP }}:{{ $address.Port }}/;
         {{ end }}
       {{ end }}
     {{ else }}
       {{ range $i, $address := $value.Addresses }}
         {{ if eq $address.Port "80" }}
-          proxy_pass http://{{ $address.IP }}:{{ $address.Port }};
+          proxy_pass http://{{ $address.IP }}:{{ $address.Port }}/;
         {{ end }}
       {{ end }}
     {{ end }}
