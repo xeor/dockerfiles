@@ -16,6 +16,3 @@ If you want to keep your settings after container exit, mount the data volume on
 # admin #
 Is available via /wwwhisper/admin/
 
-# TODO #
-In the middle of changing the logic from static linking, to using docker-gen to detect containers exposing special variables and add them directly.
-Search for "TODO", unable to test right now...
