@@ -4,6 +4,7 @@
 * Centos6 as base
 * runs etherpad-lite
 * output goes to port 80
+* run with: docker run -i -t --link some-postgres:postgresql -e "TITLE=web title" -e "ADMIN_PW?=apassword" xeor/etherpad bash
 
 # todo
 * Run "/etherpad-lite/bin/installDeps.sh" or something at buildtime to fix initial

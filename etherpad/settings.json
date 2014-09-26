@@ -1,0 +1,40 @@
+{
+  "title": "{{TITLE}}",
+  "favicon": "favicon.ico",
+  "ip": "0.0.0.0",
+  "port" : 9001,
+  "sessionKey" : "{{SESSION_KEY}}",
+  "dbType" : "postgres",
+  "dbSettings" : {
+    "user"    : "postgres",
+    "host"    : "{{DB_HOST}}",
+    "password": "",
+    "database": "pad"
+  },
+  "defaultPadText" : "{{DEFAULT_PAD_TEXT}}",
+  "requireSession" : false,
+  "editOnly" : false,
+  "sessionNoPassword" : false,
+  "minify" : true,
+  "maxAge" : 21600, // 60 * 60 * 6 = 6 hours
+
+  /* This is the path to the Abiword executable. Setting it to null, disables abiword.
+     Abiword is needed to advanced import/export features of pads*/
+  "abiword" : null,
+
+  "requireAuthentication": false,
+  "requireAuthorization": false,
+  "trustProxy": true,
+  "disableIPlogging": false,
+  "users": {
+    "admin": {
+      "password": "{{ADMIN_PW}}",
+      "is_admin": true
+    }
+  },
+  "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"],
+  "loglevel": "INFO",
+  "logconfig": {
+      "appenders": [ { "type": "console" } ]
+  }
+}
