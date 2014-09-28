@@ -2,7 +2,7 @@
   "title": "{{TITLE}}",
   "favicon": "favicon.ico",
   "ip": "0.0.0.0",
-  "port" : 9001,
+  "port" : 8080,
   "sessionKey" : "{{SESSION_KEY}}",
   "dbType" : "postgres",
   "dbSettings" : {
@@ -17,11 +17,7 @@
   "sessionNoPassword" : false,
   "minify" : true,
   "maxAge" : 21600, // 60 * 60 * 6 = 6 hours
-
-  /* This is the path to the Abiword executable. Setting it to null, disables abiword.
-     Abiword is needed to advanced import/export features of pads*/
-  "abiword" : null,
-
+  "abiword" : "/usr/bin/abiword",
   "requireAuthentication": false,
   "requireAuthorization": false,
   "trustProxy": true,
