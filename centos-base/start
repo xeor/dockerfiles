@@ -7,21 +7,21 @@ function die {
 
 function check_depending_container_connections {
   echo -n "Checking depending container connections "
-  [[ -> $DB_PORT_5432_TCP_ADDR ]] && die "No link to DB"
+  #[[ -> $DB_PORT_5432_TCP_ADDR ]] && die "No link to DB"
   echo -n "[done]"
   echo
 }
 
-function setup_ssh {
-  /usr/bin/ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+function setup {
+  echo "Running setup()"
 }
 
-setup_ssh
+setup
 
 case ${1} in
   start)
-    #check_depending_container_connections
-    monit -I
+    check_depending_container_connections
+    /usr/bin/supervisord -n -c /etc/supervisord.conf -e ${LOGLEVEL:-error}
     ;;
 
   *)
