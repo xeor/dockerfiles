@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function die {
+  echo "ERROR: ${1}"
+  exit 1
+}
+
+function check_depending_container_connections {
+  echo -n "Checking depending container connections "
+  [[ -> $DB_PORT_5432_TCP_ADDR ]] && die "No link to DB"
+  echo -n "[done]"
+  echo
+}
+
+function setup_ssh {
+  /usr/bin/ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+}
+
+setup_ssh
+
+case ${1} in
+  start)
+    #check_depending_container_connections
+    monit -I
+    ;;
+
+  *)
+    $*
+    ;;
+esac
