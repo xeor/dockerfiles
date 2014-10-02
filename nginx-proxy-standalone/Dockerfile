@@ -5,7 +5,7 @@ ENV REFRESHED_AT 2014-08-10
 ENV NGINX_VERSION 1.4.4
 
 # centos7 is broken atm because of systemd bug. Use 6 now..
-#RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+#RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 # Without centosplus, you will get multilib problems when installing openssl-devel

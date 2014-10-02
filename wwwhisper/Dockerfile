@@ -4,7 +4,7 @@ MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2014-08-10
 ENV NGINX_VERSION 1.4.4
 
-RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 RUN yum install -y tar git make gcc pcre-devel openssl-devel python-setuptools python-devel wget && \
     easy_install pip && \
     pip install supervisor virtualenv

@@ -3,7 +3,7 @@ FROM centos:centos7
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2014-08-10-b
 
-RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 
 #RUN yum update -y && yum clean all
 RUN yum install -y strace curl wget vim emacs-nox diffstat tmux \

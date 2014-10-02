@@ -4,7 +4,7 @@ MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2014-09-21
 ENV NGINX_VERSION 1.4.4
 
-RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/beta/7/x86_64/epel-release-7-1.noarch.rpm
+RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 RUN yum install -y nginx wget tar python-setuptools && easy_install pip && pip install supervisor
 
 RUN wget https://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-gen-linux-amd64-0.3.2.tar.gz && \
