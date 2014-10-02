@@ -1,3 +1,5 @@
+* This dockerfile is just here for references.. Dont use it for anything :)
+
 # Controll
 * Build it: docker build -t tagname .
 * Run: docker docker run -d -P tagname
