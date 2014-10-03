@@ -1,0 +1,49 @@
+#!/bin/bash
+
+function die {
+  echo "ERROR: ${1}"
+  exit 1
+}
+
+function check_depending_env {
+  if [ -n "${DEPENDING_ENVIRONMENT_VARS}" ]; then
+    MISSING_ENVIRONMENT_VARS=()
+    echo -n "* Checking depending environment variables "
+    for e in ${DEPENDING_ENVIRONMENT_VARS}; do
+      if [ ! -v "${e}" ]; then
+        MISSING_ENVIRONMENT_VARS+=("${e}")
+      fi
+    done
+    if [ ${#MISSING_ENVIRONMENT_VARS[@]} -gt 0 ]; then
+      echo "[missing variables]"
+      for missing in "${MISSING_ENVIRONMENT_VARS[@]}"; do
+        echo " * ${missing}"
+      done
+      echo
+      die "Missing environment variables"
+    fi
+    echo -n "[done]"
+    echo
+  fi
+}
+
+if [ -e /dinit/setup ]; then
+  /bin/sh -x /dinit/setup
+fi
+
+case ${1} in
+  run)
+    check_depending_env
+    if [ -e /dinit/run-setup ]; then
+      /bin/sh -x /dinit/setup
+    fi
+    if [ -e /dinit/run ]; then
+      /bin/sh -x /dinit/run
+    else
+      /bin/bash
+    fi
+    ;;
+  *)
+    $*
+    ;;
+esac

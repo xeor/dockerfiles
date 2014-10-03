@@ -2,9 +2,6 @@
 * centos7 base image with EPEL
 * Entrypoint script
 * Used as a base for creating other containers
-
-# Usage
-* Create a supervisord.d folder in the folder you have your Dockerfile, see ./supervisord.d/ for example services (they are only examples)
-
-# Environment
-* `LOGLEVEL`: supervisord loglevel. Can be one of `debug`, `info`, `warn`, `error`, `critical`. Defaults to `error`
+* In all images inheriting this one, you can set DEPENDING_ENVIRONMENT_VARS to a space separated list of required environment-variables.
+* If there exits an ./dinit/setup file, it will be run on ENTRYPOINT
+* If there exits an ./dinit/run-setup file, it will be run on no CMD or `run`
