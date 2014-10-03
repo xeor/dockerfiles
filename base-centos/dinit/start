@@ -39,7 +39,7 @@ case ${1} in
     fi
     if [ -e /dinit/run ]; then
       # Use exec so we replace our current process so signals can get through
-      exec /bin/sh -x /dinit/run
+      exec /bin/sh /dinit/run
     else
       /bin/bash
     fi
