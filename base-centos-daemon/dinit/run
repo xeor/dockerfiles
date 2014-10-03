@@ -1,3 +1,5 @@
 #!/bin/bash
 
-/usr/bin/supervisord -n -c /etc/supervisord.conf -e ${LOGLEVEL:-error}
+# PID, trap, wait; all belongs to 'docker stop' signal handeling.
+PID=; trap '[[ ${PID} ]] && kill ${PID}; exit 0' SIGTERM
+/usr/bin/supervisord -n -c /etc/supervisord.conf -e ${LOGLEVEL:-error} & PID=$!; wait

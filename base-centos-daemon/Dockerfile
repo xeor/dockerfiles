@@ -7,7 +7,3 @@ RUN yum install -y supervisor && yum clean all
 ONBUILD COPY supervisord.d /etc/
 
 COPY dinit/ /dinit/
-
-# In case we want to override something or place a setup file in here
-ONBUILD COPY dinit/ /dinit/
-
