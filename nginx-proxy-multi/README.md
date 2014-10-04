@@ -32,9 +32,13 @@ Note that you will need to add `--privileged=true` if you want to mount docker.s
 To add a virtual host, just add VIRTUAL_HOST as an environment variables to the containers you want shared and the proxy will detect them and start sending traffic to them if the domain matches..
 
 # ssl certificates #
-
+## For real
 * cd certificates
 * openssl genrsa -out server.key 2048
 * openssl req -new -key server.key -out server.csr
 * // submit server.csr to a certificate authority and they will probably send you a .pem bundle back.
 * // Rename the .pem to server.pem and put it in the same directory
+
+## For test
+* cd certificates
+* openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.pem -days 3650 -nodes
