@@ -24,6 +24,7 @@ location /{{ $protectpath }}/ {
       {{ end }}
     {{ end }}
   {{ end }}
+  proxy_set_header user $user;
   proxy_set_header Host $host;
 }
 {{ end }}
