@@ -17,6 +17,7 @@ If you want to keep your settings after container exit, mount the data volume on
 * `WWWHISPER_PROTECT`: Set to the "folder" you want the request to be forwarded to. Example `git` for your.site.com/git/
 * `WWWHISPER_PORT`: If the port you are using on the web-server is not 80, you can set it manually.
 * `WWWHISPER_USES_RELATIVE_PATH`: Set to `true` if the backend web-server needs the request to come in like your.site.com/api/endpoint, instead of your.site.com/git/api/endpoint. This is useful if there is no way to set the relative path on the backend application and it uses relative paths (like `../static/main.js`) to request its resources.
+* `LOGLEVEL`: Set to `debug` to see supervisord (stdout) output
 
 # admin #
 Is available via /wwwhisper/admin/

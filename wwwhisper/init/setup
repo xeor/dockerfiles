@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source /wwwhisper/virtualenv/bin/activate
+
+touch /sites.conf # So nginx wont complain before its created
+
+# add_site_config barfs if the directory exists, which happens if we mount the same site directory each run.
+/wwwhisper/add_site_config.py --site-url ${SITE_URL} --admin-email ${ADMIN_MAIL} 2> /dev/null || true
+
+site_path=$(ls -d /wwwhisper/sites/*)
+sed "s@__SITE_PATH__@${site_path}@g" -i /usr/local/nginx/conf/nginx.conf
+
+chown -R wwwhisper:www-data /wwwhisper

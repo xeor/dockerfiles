@@ -1,10 +1,10 @@
-FROM centos:centos7
+FROM xeor/base-centos-daemon
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-08-10
-ENV NGINX_VERSION 1.4.4
+ENV DEPENDING_ENVIRONMENT_VARS SITE_URL ADMIN_MAIL
+ENV REFRESHED_AT 2014-10-06
+ENV NGINX_VERSION 1.6.2
 
-RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 RUN yum install -y tar git make gcc pcre-devel openssl-devel python-setuptools python-devel wget && \
     easy_install pip && \
     pip install supervisor virtualenv
@@ -23,16 +23,11 @@ RUN wget https://github.com/jwilder/docker-gen/releases/download/0.3.2/docker-ge
 RUN adduser --system www-data && adduser --system -G www-data wwwhisper
 RUN cd / && git clone https://github.com/wrr/wwwhisper.git && cd wwwhisper && virtualenv virtualenv && source virtualenv/bin/activate && pip install -r requirements.txt
 
+ADD supervisord.conf /etc/supervisord.conf
 ADD sites.tmpl /
 ADD index.tmpl /
-ADD supervisord.conf /
 ADD docker-gen.conf /
 ADD nginx.conf /usr/local/nginx/conf/nginx.conf
-
-ADD start /start
-RUN chmod 755 /start
-ENTRYPOINT ["/bin/bash", "-e", "/start"]
-CMD ["start"]
 
 ENV DOCKER_HOST unix:///docker.sock
 EXPOSE 80
