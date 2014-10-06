@@ -27,19 +27,19 @@ function check_depending_env {
   fi
 }
 
-if [ -e /dinit/setup ]; then
-  /bin/sh -x /dinit/setup
+if [ -e /init/setup ]; then
+  /bin/sh -x /init/setup
 fi
 
 case ${1} in
   run)
     check_depending_env
-    if [ -e /dinit/run-setup ]; then
-      /bin/sh -x /dinit/setup
+    if [ -e /init/run-setup ]; then
+      /bin/sh -x /init/setup
     fi
-    if [ -e /dinit/run ]; then
+    if [ -e /init/run ]; then
       # Use exec so we replace our current process so signals can get through
-      exec /bin/sh /dinit/run
+      exec /bin/sh /init/run
     else
       /bin/bash
     fi
