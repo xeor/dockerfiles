@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sed "s@{{TITLE}}@${TITLE:-Etherpad}@g" -i /etherpad-lite/settings.json
+sed "s@{{SESSION_KEY}}@${SESSION_KEY:-abcdef}@g" -i /etherpad-lite/settings.json
+sed "s@{{DB_HOST}}@${POSTGRESQL_PORT_5432_TCP_ADDR}@g" -i /etherpad-lite/settings.json
+sed "s@{{DEFAULT_PAD_TEXT}}@$${DEFAULT_PAD_TEXT:-}@g" -i /etherpad-lite/settings.json
+sed "s@{{ADMIN_PW}}@${ADMIN_PW:-password}@g" -i /etherpad-lite/settings.json

@@ -17,7 +17,7 @@
   "sessionNoPassword" : false,
   "minify" : true,
   "maxAge" : 21600, // 60 * 60 * 6 = 6 hours
-  "abiword" : "/usr/bin/abiword",
+// "abiword" : "/usr/bin/abiword",
   "requireAuthentication": false,
   "requireAuthorization": false,
   "trustProxy": true,
