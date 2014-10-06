@@ -6,7 +6,7 @@
 # Other usefull containers
 * docker run -t -i linux/kali-metasploit (https://registry.hub.docker.com/u/linux/kali-metasploit/)
 * squid in a can (usefull for caching)
-** info: https://github.com/jpetazzo/squid-in-a-can
-** run: docker run --net host -d -v $PWD/data:/var/spool/squid3 jpetazzo/squid-in-a-can
-** run: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 3129
+  * info: https://github.com/jpetazzo/squid-in-a-can
+  * run: docker run --net host -d -v $PWD/data:/var/spool/squid3 jpetazzo/squid-in-a-can
+  * run: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 3129
 * https://github.com/jpetazzo/critmux
