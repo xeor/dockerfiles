@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# So nginx wont complain before its created
+touch /sites.conf
