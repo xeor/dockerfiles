@@ -8,3 +8,11 @@ touch etc/.ui_login # Disable the "first time signing in" message
 ./bin/splunk edit user admin -password ${SPLUNK_PASS} -auth admin:changeme --accept-license # Accept lic at first command
 ./bin/splunk enable listen 9997 -auth admin:${SPLUNK_PASS}
 ./bin/splunk edit licenser-groups Free -is_active 1
+./bin/splunk add udp 514 -sourcetype syslog
+
+
+if [ -e /data ]; then
+  ./bin/splunk add monitor /data
+fi
+
+chown -R splunk: /opt/splunk

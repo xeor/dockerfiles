@@ -1,8 +1,0 @@
-[program:inotify]
-command=/bin/bash -c 'while inotifywait -e close_write -r /splunk/config; do /opt/splunk/bin/splunk restart; done'
-autorestart=true
-stopwaitsecs=2
-stopasgroup=true
-redirect_stdout=true
-redirect_stderr=true
-priority=20

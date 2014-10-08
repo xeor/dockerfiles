@@ -19,14 +19,18 @@ Since we cant download the splunk rpm in the building process. You need to build
 
 # Run
 
-Start the container with something like:
+Start the container with something like `docker run -d -P xeor/splunk` (to test it out). For using it for something useful, use volumes..
 
-    docker run -d -p 80:80 -v /path/to/datastore:/data -v /path/to/configs:/conf xeor/splunk
+* It will automaticly start to listen on 514/udp and set sourcetype to `syslog`
+
+## Volumes
+* `/opt/splunk/var/lib/splunk`: For the splunk data
+* `/data`: If it exists/is-mounted, we will add it and monitor it (great for a quick test).
 
 ## Environment variables available
-* `LOGLEVEL`: Set to `debug` to see output from supervisord and Splunks stdout.
 * `SPLUNK_PW`: FIXME
 * `SPLUNK_WEB_PATH`: FIXME (root_endpoint in "system/default/web.conf")
 
-# Config - FIXME
-* Splunk will automaticly restart (via inotify) if you change any files in the configuration directory
+# Config
+* The folder named `main_app` is basicly an empty app. You can use it (or a new app) as volumes mounted to something like `/opt/splunk/etc/apps/main`.
+  * Use this method to "install" new apps as well if you want them persistent.
