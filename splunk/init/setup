@@ -1,15 +1,21 @@
 #!/bin/bash
 
-SPLUNK_PASS=testing
+_SPLUNK_PW=${SPLUNK_PW:-password}
 
 cd /opt/splunk
 
 touch etc/.ui_login # Disable the "first time signing in" message
-./bin/splunk edit user admin -password ${SPLUNK_PASS} -auth admin:changeme --accept-license # Accept lic at first command
-./bin/splunk enable listen 9997 -auth admin:${SPLUNK_PASS}
-./bin/splunk edit licenser-groups Free -is_active 1
-./bin/splunk add udp 514 -sourcetype syslog
+./bin/splunk edit user admin -password ${_SPLUNK_PW} -auth admin:changeme --accept-license # Accept lic at first command
+./bin/splunk enable listen 9997 -auth admin:${_SPLUNK_PW}
 
+[[ ${SPLUNK_ENTERPRISE_TRIAL} ]] || ./bin/splunk edit licenser-groups Free -is_active 1
+
+echo -e "[default]\n[settings]\n\n" >> /opt/splunk/etc/system/local/web.conf
+[[ ${SPLUNK_WEB_PATH} ]] && echo "root_endpoint = /${SPLUNK_WEB_PATH}/" >> /opt/splunk/etc/system/local/web.conf
+[[ ${SPLUNK_BEHIND_PROXY} ]] && echo "tools.proxy.on = True" >> /opt/splunk/etc/system/local/web.conf
+
+
+./bin/splunk add udp 514 -sourcetype syslog
 
 if [ -e /data ]; then
   ./bin/splunk add monitor /data
