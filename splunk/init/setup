@@ -1,6 +1,6 @@
 #!/bin/bash
 
-_SPLUNK_PW=${SPLUNK_PW:-password}
+_SPLUNK_PW=${SPLUNK_PW:-changeme}
 
 cd /opt/splunk
 
@@ -8,17 +8,35 @@ touch etc/.ui_login # Disable the "first time signing in" message
 ./bin/splunk edit user admin -password ${_SPLUNK_PW} -auth admin:changeme --accept-license # Accept lic at first command
 ./bin/splunk enable listen 9997 -auth admin:${_SPLUNK_PW}
 
-[[ ${SPLUNK_ENTERPRISE_TRIAL} ]] || ./bin/splunk edit licenser-groups Free -is_active 1
+[[ ${SPLUNK_ENTERPRISE} ]] || ./bin/splunk edit licenser-groups Free -is_active 1
 
 echo -e "[default]\n[settings]\n\n" >> /opt/splunk/etc/system/local/web.conf
-[[ ${SPLUNK_WEB_PATH} ]] && echo "root_endpoint = /${SPLUNK_WEB_PATH}/" >> /opt/splunk/etc/system/local/web.conf
-[[ ${SPLUNK_BEHIND_PROXY} ]] && echo "tools.proxy.on = True" >> /opt/splunk/etc/system/local/web.conf
+[[ ${SPLUNK_WEB_PATH} ]] && echo "root_endpoint = /${SPLUNK_WEB_PATH}" >> /opt/splunk/etc/system/local/web.conf
+
+if [[ ${SPLUNK_SSO} ]]; then
+  # Get docker proxy ip
+  _PROXY_IP=$(getent hosts proxy | cut -d' ' -f1)
+  [[ ${_PROXY_IP} ]] || (echo "You need to link a proxy, or disable SSO"; exit 1)
+  echo -e "remoteUser = ${SPLUNK_SSO_REMOTEUSER}\ntrustedIP = ${_PROXY_IP}" >> /opt/splunk/etc/system/local/web.conf
+
+  sed "/\[general\]/a trustedIP = 127.0.0.1" -i /opt/splunk/etc/system/local/server.conf
+  ./bin/splunk add user "${SPLUNK_SSO_ADMIN}" -role admin -password password
+fi
+
+[[ ${SPLUNK_SERVERNAME} ]] && sed "s/\(serverName = \).*/\1${SPLUNK_SERVERNAME}/" -i /opt/splunk/etc/system/local/server.conf
+[[ ${SPLUNK_SERVERNAME} ]] && sed "s/\(host = \).*/\1${SPLUNK_SERVERNAME}/" -i /opt/splunk/etc/system/local/inputs.conf
+
+[[ ${SPLUNK_SESSION_TIMEOUT} ]] && sed "/\[general\]/a sessionTimeout = ${SPLUNK_SESSION_TIMEOUT}" -i /opt/splunk/etc/system/local/server.conf
 
 
 ./bin/splunk add udp 514 -sourcetype syslog
 
 if [ -e /data ]; then
   ./bin/splunk add monitor /data
+fi
+
+if [ -e /license.lic ]; then
+  ./bin/splunk add licenses /license.lic 
 fi
 
 chown -R splunk: /opt/splunk
