@@ -1,17 +1,19 @@
-# NOT DONE!! #
-
-Splunk in a can, which uses the free 500mb/day version of Splunk.
+Splunk in a can, which uses the free 500mb/day version of Splunk as default.
 Splunk is an awesome log-analyzer, check out more information at http://www.splunk.com/
 
-# Checkout
-* License? How to check?
-* system/default/web.conf: "remoteUser = REMOTE_USER", "SSOMode = strict" 
+* Splunk wont always run depending on the underlying filesystem. I noticed this while using boot2docker, so it might not work there..
+* This container is ment for testing Splunk, or running it with free version home, not on internet.
+  * Configurations is not best practise
+  * Security might not be optimal
+  * Splunk have said nothing about running in Docker
+  * Have no idea how fast/slow it will run..
+  * And so on... Use it for test :)
 
 # Run
 
 Start the container with something like `docker run -d -P xeor/splunk` (to test it out). For using it for something useful, use volumes and see `Use-cases` below..
 
-* It will automaticly start to listen on 514/udp and set sourcetype to `syslog`
+* It will automaticly start to listen on 514 tcp/udp and set sourcetype to `syslog`
 
 ## Use-cases
 
@@ -29,6 +31,10 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
   * Start and restart with normal `/opt/splunk/bin/splunk start` `/opt/splunk/bin/splunk restart` and so on. No magic.
   * When you are done, just exit the shell, the container will be gone.
 
+* Figure out when your files have been changed (this is obiously just an example of all the fun you can do)..
+  * docker run -i -t -p 8000:8000 -p 514:514 --rm xeor/splunk
+  * find /etc -print0 | xargs -0 stat -c "%z %n" | nc localhost 514
+  * Do a search for `sourcetype=syslog | fields _time, filename` and get a visual representation of when the files have changed..
 
 ## Volumes
 * `/opt/splunk/var/lib/splunk`: For the splunk data

@@ -29,7 +29,8 @@ fi
 [[ ${SPLUNK_SESSION_TIMEOUT} ]] && sed "/\[general\]/a sessionTimeout = ${SPLUNK_SESSION_TIMEOUT}" -i /opt/splunk/etc/system/local/server.conf
 
 
-./bin/splunk add udp 514 -sourcetype syslog
+./bin/splunk add tcp 514 -sourcetype syslog -resolvehost true
+./bin/splunk add udp 514 -sourcetype syslog -resolvehost true
 
 if [ -e /data ]; then
   ./bin/splunk add monitor /data
