@@ -15,7 +15,7 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
 
 * It will automaticly start to listen on 514 tcp/udp and set sourcetype to `syslog`
 
-## Use-cases
+## Use-cases (and tips/tricks)
 
 * Quickly spin up a "throw-away" Splunk to view your local /var/log/. ^c when done..
   * docker run -i -t -v /var/log/:/data/ -p 8000:8000 --rm xeor/splunk
@@ -35,6 +35,14 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
   * docker run -i -t -p 8000:8000 -p 514:514 --rm xeor/splunk
   * find /etc -print0 | xargs -0 stat -c "%z %n" | nc localhost 514
   * Do a search for `sourcetype=syslog | fields _time, filename` and get a visual representation of when the files have changed..
+
+* Persistent setup (apps, config, data, settings, ...)
+  * To get this to work, start with mounting a temporary folder inside your container to copy over the initial content of /opt/splunk (since the content is inside the Docker image already).
+    * Something like host# mkdir splunk_opt; docker run -i -t -v $PWD/splunk_opt:/splunk_opt --rm xeor/splunk bash`
+  * Copy the content over to the temp folders; `cp -prv /opt/splunk/* /splunk_opt/`, exit the container, and run it with `-v $PWD/splunk_opt:/opt/splunk` from now.
+
+* Trobleshoot errors in the Docker setup script (ie. enter the containter without ANY Splunk setup)
+  * Start the container with overriding the entrypoint and setting cmd to -l, like: `docker run -i -t --rm --entrypoint=/bin/bash xeor/splunk -l`
 
 ## Volumes
 * `/opt/splunk/var/lib/splunk`: For the splunk data
