@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# The mounted data directory is /data, but /pydio/data is probably already filled with files.
+# This is a trick to support both new /data, populated /data and one-time installs to test..
+if [[ -d /data ]]; then
+  if [[ -d /data/plugins ]]; then
+    rm -rf /pydio/data
+  else
+    cp -prv /pydio/data/* /data/
+  fi
+  ln -s /data /pydio/data
+fi
