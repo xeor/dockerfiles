@@ -9,16 +9,14 @@ There is a trusted docker-build made from (https://github.com/pydio/pydio-core/t
 * Wanted centos7
 * Run as non-root behind port 8080
 * No sshd
-* No database..
+* No database.. (but sqlite support is in)
 * No SSL, as this will be done by a reverse proxy
+* Many libs for using the different plugins.
 
 # todo
 * Warnings/Errors at installation
   * Missing "Server charset encoding"
-* Clever way to mount /data, copy/symling /pydio/data if exists, or something to get a persistent install..
-* php extensions for different plugins
-* Authentication based on HTTP_USER
-* Cleanup
 
 # run
-docker run -d -v ${PWD}/data:/pydio/data xeor/pydio
+* docker run -d -v ${PWD}/pydio_data:/data xeor/pydio
+  * To mount other directores, use something other than /data. /data is for all the pydio configuration (if you want it persistant).
