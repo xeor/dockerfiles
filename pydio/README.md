@@ -10,10 +10,11 @@ There is a trusted docker-build made from (https://github.com/pydio/pydio-core/t
 * Run as non-root behind port 8080
 * No sshd
 * No database..
+* No SSL, as this will be done by a reverse proxy
 
 # todo
-* Redirect rule to get the .php extension gone
 * Warnings/Errors at installation
+  * Missing "Server charset encoding"
 * Clever way to mount /data, copy/symling /pydio/data if exists, or something to get a persistent install..
 * php extensions for different plugins
 * Authentication based on HTTP_USER
