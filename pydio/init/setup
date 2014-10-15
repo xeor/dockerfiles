@@ -3,10 +3,13 @@
 # The mounted data directory is /data, but /pydio/data is probably already filled with files.
 # This is a trick to support both new /data, populated /data and one-time installs to test..
 if [[ -d /data ]]; then
+
+  # Just to see if it is populated, so we can determine if we need to copy over new "template" files
   if [[ -d /data/plugins ]]; then
     rm -rf /pydio/data
   else
     cp -prv /pydio/data/* /data/
   fi
   ln -s /data /pydio/data
+  chown apache: /data
 fi
