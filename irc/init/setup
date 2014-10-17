@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Running setup"
+
+if [[ ! -e /.weechat/ssl/relay.pem ]]; then
+  mkdir /.weechat/ssl 2> /dev/null
+  cd /.weechat/ssl
+  openssl req -nodes -newkey rsa:4096 -keyout relay.pem -x509 -days 365 -out relay.pem -subj "/CN=localhost/"
+fi
+
+echo "Certificate details for the relay:"
+openssl x509 -in /.weechat/ssl/relay.pem -noout -serial -fingerprint

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# nginx &
+#/usr/local/bin/weechat -d /weechat
