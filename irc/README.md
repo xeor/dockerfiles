@@ -80,7 +80,8 @@ useFavico       true
 
 ## bitlebee (http://www.bitlbee.org/)
 * Config files
-* libpurple (to support more protocols) http://wiki.bitlbee.org/
+* Getting: /init/run: line 5: /usr/local/sbin/bitlbee: No such file or directory, on start
 
 # environment variables
-* None? Just autogenerate configuration and make it custimizable..? Logic of what stuff is called instead 
+* `AUTOSTART`: Dont halt at container start right after setup..
+* `SSH_KEY`: The ssh key you want to use for logging in with the `irc` user on ssh

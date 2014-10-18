@@ -30,6 +30,10 @@ if [[ ${SSH_KEY} ]]; then
   echo ${SSH_KEY} > /home/irc/.ssh/authorized_keys && chown irc:irc /home/irc/.ssh/authorized_keys && chmod 600 /home/irc/.ssh/authorized_keys
 fi
 
+chown -R irc:irc /data
+
+set +x
+
 # List all details
 echo "\n\n**************************************"
 echo "Certificate details for the relay:"
@@ -38,8 +42,10 @@ echo
 
 echo "ssh key fingerprints (if any):"
 for i in /etc/ssh/*.pub; do ssh-keygen -lf ${i}; done
-echo
+
+if [[ ! ${AUTOSTART} ]]; then
+  echo -e "* Done setting it up. Press any key to start.."
+  read
+fi
 
 echo "**************************************"
-
-chown -R irc:irc /data
