@@ -1,12 +1,45 @@
 #!/bin/bash
 
-echo "Running setup"
+echo "Running setup, please wait.."
 
-if [[ ! -e /.weechat/ssl/relay.pem ]]; then
-  mkdir /.weechat/ssl 2> /dev/null
-  cd /.weechat/ssl
+# We are only good for testing...
+[[ -e /data ]] || mkdir /data
+
+# WeeChat
+if [[ ! -e /data/weechat ]]; then
+  # Tricking weechat into generating default configs..
+  tmux new-session -d "/usr/local/bin/weechat -d /data/weechat"
+  sleep 3
+  pkill -9 weechat
+
+  mkdir /data/weechat/ssl 2> /dev/null
+  cd /data/weechat/ssl
   openssl req -nodes -newkey rsa:4096 -keyout relay.pem -x509 -days 365 -out relay.pem -subj "/CN=localhost/"
 fi
+ln -s /data/weechat /.weechat
 
+# BitlBee
+if [[ ! -e /data/bitlbee ]]; then
+  mv /usr/local/etc/bitlbee /data/
+fi
+ln -s /data/bitlbee /usr/local/etc/bitlbee
+
+# SSHd
+if [[ ${SSH_KEY} ]]; then
+  mkdir /home/irc/.ssh && chown irc:irc /home/irc/.ssh && chmod 700 /home/irc/.ssh
+  echo ${SSH_KEY} > /home/irc/.ssh/authorized_keys && chown irc:irc /home/irc/.ssh/authorized_keys && chmod 600 /home/irc/.ssh/authorized_keys
+fi
+
+# List all details
+echo "\n\n**************************************"
 echo "Certificate details for the relay:"
 openssl x509 -in /.weechat/ssl/relay.pem -noout -serial -fingerprint
+echo
+
+echo "ssh key fingerprints (if any):"
+for i in /etc/ssh/*.pub; do ssh-keygen -lf ${i}; done
+echo
+
+echo "**************************************"
+
+chown -R irc:irc /data
