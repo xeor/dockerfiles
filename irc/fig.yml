@@ -1,0 +1,8 @@
+irc:
+  build: .
+  environment:
+    SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAABI....
+  ports:
+    - 2222:22
+    - 3000:3000
+    - 9001:9001

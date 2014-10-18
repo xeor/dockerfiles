@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Run all this in supervisord instead?
+/usr/sbin/nginx &
+/usr/local/sbin/bitlbee -F -u irc -c /data/bitlbee/bitlbee.conf &
+/usr/bin/node /wetty/app.js -p 3000 &
+/usr/sbin/sshd &
+
+su irc -c 'tmux new-session -d "/usr/local/bin/weechat"'
+su irc -c 'tmux attach'
