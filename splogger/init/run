@@ -1,0 +1,4 @@
+#!/bin/bash
+
+touch /fluentd.conf
+/usr/bin/ruby /usr/local/bin/fluentd -c /fluentd.conf -d /fluentd.pid 
