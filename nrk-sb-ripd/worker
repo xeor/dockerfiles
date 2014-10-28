@@ -150,11 +150,9 @@ class Ripper:
 class SickBeard:
 
     def __init__(self, url, api_key):
-        self.url = url
-        self.api_key = api_key
-        self.base_url = '{}/{api_key}'
+        self.base_url = '{}/api/{}'.format(url, api_key)
 
-    def get_show_with_networks(networks):
+    def get_show_with_networks(self, networks):
         # Networks is a list, so we can support networks with multiple names, like "NRK".
         # Its totally fine to only have 1 entry in the list
         shows = []
@@ -162,15 +160,16 @@ class SickBeard:
         data = json.loads(data.text)
         show_ids = [i for i in data['data'] if data['data'][i]['network'] in networks]
         for show_id in show_ids:
-            data = requests.get('{}/?cmd=show&tvbid={}'.format(self.base_url, show_id))
+            data = requests.get('{}/?cmd=show&tvdbid={}'.format(self.base_url, show_id))
             data = json.loads(data.text)
             shows.append({
                 'sb_id': show_id,
                 'path': data['data']['location'],
                 'name': data['data']['show_name']
             })
+        return shows
 
-    def refresh(show_id):
+    def refresh(self, show_id):
         # FIXME: Rename episodes...? Not an API?
         requests.get('{}/?cmd=show.refresh&tvdbid={}'.format(self.base_url, show_id))
         requests.get('{}/?cmd=show.update&tvdbid={}'.format(self.base_url, show_id))
@@ -183,4 +182,4 @@ if __name__ == '__main__':
     for show in sb.get_show_with_networks(['NRK1', 'NRK2', 'NRK3']):
         # Ripper(show['name']).download_missing(show['path'])
         # sb.refresh(show['sb_id'])
-        pass
+        print(show)

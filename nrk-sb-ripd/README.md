@@ -2,5 +2,5 @@
 * Start with something like: `docker run -d -v $PWD/download:/download xeor/nrk-sb-ripd`
 
 # env
-* `SICKBEARD_URL`: Sickbeard url
+* `SICKBEARD_URL`: Sickbeard url. Including http (schema), and no trailing slash
 * `SICKBEARD_API_KEY`: Api key. Remember to enable this in Sickbeard settings
