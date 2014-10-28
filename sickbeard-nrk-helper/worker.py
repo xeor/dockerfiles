@@ -113,7 +113,7 @@ class Ripper:
             '-vcodec', 'copy',    # Use the same videocodec
             '-acodec', 'copy',    # As for audio
             '-hide_banner',       # Nothing we need
-            '/{}/{}/{}.mkv'.format(folder, names['season'], names['shortname'])
+            '/{}/S{}/{}.mkv'.format(folder, names['season'], names['shortname'])
         ])
 
     def filter_out_existing(self, wanted_shows, path):
