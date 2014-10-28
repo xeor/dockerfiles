@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cat >> /fluentd.tmpl <<EOF
+<match docker.**>
+  type splunk
+  host ${SPLUNK_HOST}
+  port ${SPLUNK_PORT}
+</match>
+EOF
