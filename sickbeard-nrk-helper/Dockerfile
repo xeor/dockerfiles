@@ -14,4 +14,4 @@ RUN yum localinstall -y https://www.softwarecollections.org/en/scls/rhscl/python
     scl enable python33 'easy_install pip' && \
     scl enable python33 'pip install ipython requests beautifulsoup4'
 
-ADD worker /
+ADD worker.py /
