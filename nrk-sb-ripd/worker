@@ -103,14 +103,17 @@ class Ripper:
         data = requests.get(master_playlist)
         show_playlist = sorted(re.findall(r'.*index_[0-9]+_av.*', data.text))[-1]
         logger.debug('Starting download of {} from playlist {}'.format(names['shortname'], show_playlist))
-        return
+        try:
+            os.makedirs('{}/{}'.format(folder, names['season']))
+        except FileExistsError:
+            pass
         subprocess.call([
             '/usr/bin/ffmpeg',
             '-i', show_playlist,  # Input
             '-vcodec', 'copy',    # Use the same videocodec
             '-acodec', 'copy',    # As for audio
             '-hide_banner',       # Nothing we need
-            '/{}/{}.mkv'.format(folder, names['shortname'])
+            '/{}/{}/{}.mkv'.format(folder, names['season'], names['shortname'])
         ])
 
     def filter_out_existing(self, wanted_shows, path):
@@ -135,7 +138,7 @@ class Ripper:
 
         return shows
 
-    def download_missing(self, folder):
+    def download_missing_in_folder(self, folder):
         show_url = self.find_show_url(self.query)
         if not show_url:
             return None
@@ -144,13 +147,24 @@ class Ripper:
         shows = self.filter_out_existing(shows, folder)
         for show in shows:
             self.download_show(show['url'], folder)
-            break
+
+    def download_episodes(self, wanted_shows, folder):
+        shows = []  # The ones we will download
+        show_url = self.find_show_url(self.query)
+        if not show_url:
+            return None
+        for show in self.get_shows_by_url(show_url):
+            if show['shortname'] in wanted_shows:
+                self.download_show(show['url'], folder)
 
 
 class SickBeard:
 
     def __init__(self, url, api_key):
+        self.url = url
+        self.api_key = api_key
         self.base_url = '{}/api/{}'.format(url, api_key)
+        logger.debug('Setting base url for SickBeard to {}'.format(self.base_url))
 
     def get_show_with_networks(self, networks):
         # Networks is a list, so we can support networks with multiple names, like "NRK".
@@ -159,6 +173,7 @@ class SickBeard:
         data = requests.get('{}/?cmd=shows'.format(self.base_url))
         data = json.loads(data.text)
         show_ids = [i for i in data['data'] if data['data'][i]['network'] in networks]
+        logger.debug('Found {} as shows matching one of the network ({})'.format(show_ids, networks))
         for show_id in show_ids:
             data = requests.get('{}/?cmd=show&tvdbid={}'.format(self.base_url, show_id))
             data = json.loads(data.text)
@@ -169,8 +184,24 @@ class SickBeard:
             })
         return shows
 
+    def get_wanted_in_network(self, network):
+        shows = {}
+        for show in sb.get_show_with_networks(['NRK1', 'NRK2', 'NRK3']):
+            shows[show['sb_id']] = {'path': show['path'], 'name': show['name'], 'missing': []}
+            data = requests.get('{}/?cmd=show.seasons&tvdbid={}'.format(self.base_url, show['sb_id']))
+            data = json.loads(data.text)
+            for season in data['data']:
+                for episode in data['data'][season]:
+                    if data['data'][season][episode]['status'] == 'Wanted':
+                        shortname = 'S{}E{}'.format(season.zfill(2), episode.zfill(2))
+                        shows[show['sb_id']]['missing'].append(shortname)
+
+        logger.debug('The episodes we want is: {}'.format(shows))
+        return shows
+
     def refresh(self, show_id):
         # FIXME: Rename episodes...? Not an API?
+        logger.debug('Refreshing/updating show {} in SickBeard'.format(show_id))
         requests.get('{}/?cmd=show.refresh&tvdbid={}'.format(self.base_url, show_id))
         requests.get('{}/?cmd=show.update&tvdbid={}'.format(self.base_url, show_id))
 
@@ -179,7 +210,6 @@ if __name__ == '__main__':
     logger.setLevel(logging.DEBUG)  # Set to logging.DEBUG for debug
 
     sb = SickBeard(os.environ.get('SICKBEARD_URL'), os.environ.get('SICKBEARD_API_KEY'))
-    for show in sb.get_show_with_networks(['NRK1', 'NRK2', 'NRK3']):
-        # Ripper(show['name']).download_missing(show['path'])
-        # sb.refresh(show['sb_id'])
-        print(show)
+    for show_id, data in sb.get_wanted_in_network(['NRK1', 'NRK2', 'NRK3']).items():
+        Ripper(data['name']).download_episodes(data['missing'], data['path'])
+        sb.refresh(show_id)
