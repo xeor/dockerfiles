@@ -29,5 +29,8 @@ ADD index.tmpl /
 ADD docker-gen.conf /
 ADD nginx.conf /usr/local/nginx/conf/nginx.conf
 
+COPY init/ /init/
+COPY supervisord.d/ /etc/supervisord.d/
+
 ENV DOCKER_HOST unix:///docker.sock
 EXPOSE 80

@@ -17,5 +17,6 @@ RUN git clone --progress --verbose https://github.com/ether/etherpad-lite.git &&
     npm install ep_list_pads ep_public_view
 
 ADD settings.json /etherpad-lite/
+COPY supervisord.d/ /etc/supervisord.d/
 
 EXPOSE 8080

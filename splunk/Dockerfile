@@ -14,5 +14,7 @@ RUN yum localinstall -y /splunk.rpm
 
 COPY main_app/ /opt/splunk/etc/apps/main/
 
+COPY init/ /init/
+
 EXPOSE 8000 9997
 

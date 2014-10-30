@@ -16,4 +16,6 @@ RUN yum install -y rubygems ruby-devel gcc && \
 
 ADD fluentd.tmpl /
 
+COPY init/ /init/
+
 ENV DOCKER_HOST unix:///var/run/docker.sock

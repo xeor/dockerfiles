@@ -7,3 +7,6 @@ RUN yum install -y wget unzip par2cmdline python-cheetah python-configobj python
     yum localinstall -y http://pkgs.repoforge.org/unrar/unrar-5.0.3-1.el7.rf.x86_64.rpm
 
 RUN wget https://github.com/sabnzbd/sabnzbd/archive/0.7.18.zip -O sabnzbd.zip && unzip sabnzbd.zip && mv sabnzbd-* sabnzbd
+
+COPY init/ /init/
+COPY supervisord.d/ /etc/supervisord.d/

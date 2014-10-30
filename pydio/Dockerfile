@@ -17,7 +17,8 @@ RUN yum install -y zip unzip php php-fpm php-xml php-pdo php-mcrypt php-gd php-p
     
 ADD nginx.conf /etc/nginx/conf.d/pydio.conf
 
-
+COPY init/ /init/
+COPY supervisord.d/ /etc/supervisord.d/
 
 VOLUME ["/data"]
 EXPOSE 8080

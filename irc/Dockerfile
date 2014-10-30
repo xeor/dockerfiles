@@ -40,4 +40,6 @@ RUN yum install -y glib2-devel libotr-devel libpurple-devel && \
     tar -zxvf bitlbee.tgz && mv bitlbee-* bitlbee-build && cd bitlbee-build && \
     ./configure --otr=1 --purple=1 && make && make install && make install-etc
 
+COPY init/ /init/
+
 #USER irc

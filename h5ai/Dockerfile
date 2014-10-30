@@ -12,6 +12,8 @@ RUN yum localinstall -y http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dext
 #    sed '/$this->root_abs_path = 
     
 ADD nginx.conf /etc/nginx/conf.d/h5ai.conf
+COPY init/ /init/
+COPY supervisord.d/ /etc/supervisord.d/
 
 VOLUME ["/data"]
 EXPOSE 8080
