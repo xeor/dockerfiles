@@ -8,3 +8,10 @@
 * `SCAN_TIME`: How often we will check if we can find any wanted episodes (in seconds!). Default 86400
 * `SICKBEARD_URL`: Sickbeard url. With schema, and without trailing /
 * `SICKBEARD_API_KEY`: Api key. Remember to enable this in Sickbeard settings
+
+# todo
+* entrypoint script to download manually.
+* cron-like timer
+* smarter timer, we know when the show runs
+* support for other sites, like nrksuper
+* support for weird episodenames, some of the shows got date-names
