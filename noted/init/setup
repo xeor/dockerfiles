@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Running setup"
+
+if [[ ! -d /data ]]; then
+  mkdir /data
+fi
+
+if [[ ! -d /data/.ipython ]]; then
+  scl enable python33 'ipython profile create nbserver'
+
+  echo '%matplotlib inline' > /data/.ipython/load_matplotlib.ipy
+
+  sed "/^# c.NotebookApp.ip = /cc.NotebookApp.ip = '*'" -i /data/.ipython/profile_nbserver/ipython_notebook_config.py
+  sed "/^# c.NotebookApp.port = /cc.NotebookApp.port = 8888" -i /data/.ipython/profile_nbserver/ipython_notebook_config.py
+  sed "/^# c.NotebookApp.notebook_dir = /cc.NotebookApp.notebook_dir = '/data'" -i /data/.ipython/profile_nbserver/ipython_notebook_config.py
+  sed "/^# c.IPKernelApp.exec_files = /cc.IPKernelApp.exec_files = ['load_matplotlib.ipy']" -i /data/.ipython/profile_nbserver/ipython_notebook_config.py
+
+  if [[ ${IPN_BASE_URL} ]]; then
+    sed "/^# c.NotebookApp.base_url = /cc.NotebookApp.base_url = ${IPN_BASE_URL}" -i /data/.ipython/profile_nbserver/ipython_notebook_config.py
+  fi
+fi
+
