@@ -21,3 +21,7 @@ Why?
 * Because your note will be stored as plain files and you should be able to use tools like grep to search your notes (locally).
 * Didnt want to run the daemons we run on my desktop
 * Wanted something that could work as a helper, not something I absolutly had to run all the time..
+
+# todo
+* taggo needs to do relative path symlinks
+* git
