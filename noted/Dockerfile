@@ -14,8 +14,8 @@ EXPOSE 8888
 COPY init/ /init/
 COPY supervisord.d/ /etc/supervisord.d/
 
+# Mostly ipython notebook
 COPY requirements.txt /
-
 RUN yum install -y gcc gcc-c++ zeromq3-devel freetype-devel libpng-devel && \
     yum localinstall -y https://www.softwarecollections.org/en/scls/rhscl/python33/epel-7-x86_64/download/rhscl-python33-epel-7-x86_64.noarch.rpm && \
     yum install -y scl-utils python33 && \
@@ -23,3 +23,8 @@ RUN yum install -y gcc gcc-c++ zeromq3-devel freetype-devel libpng-devel && \
     scl enable python33 'pip install -r /requirements.txt' && \
     yum clean all
 
+# Taggo
+RUN yum install -y git inotify-tools && \
+    git clone https://github.com/xeor/taggo.git && \
+    yum clean all
+COPY taggo.cfg /taggo/taggo.cfg

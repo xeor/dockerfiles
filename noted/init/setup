@@ -21,3 +21,6 @@ if [[ ! -d /data/.ipython ]]; then
   fi
 fi
 
+if [[ ! -d /data/_tags ]]; then
+  mkdir /data/_tags
+fi
