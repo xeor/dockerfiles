@@ -1,7 +1,7 @@
 FROM xeor/base-centos-daemon
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-11-10
+ENV REFRESHED_AT 2014-11-13
 
 # Force python3's stdin/stdout encoding to be utf-8, instead of guessing..
 ENV PYTHONIOENCODING utf-8

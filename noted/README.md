@@ -1,6 +1,3 @@
-** TODO, NOT DONE **
-
-
 Noted is a note daemon that runs note-related helpers inside a Docker-container. There is a specific structure you should have on your notes, but it is fairly logical.
 The only thing you haveto do is mount your note-folder, and let this container run...
 
@@ -13,7 +10,6 @@ Your notes should (just as an best practice thingy for now, but might be needed)
 
 What the container will provide
 * Tag manager daemon
-* Git auto-commit
 * iPython notebook notes
 * Dropbox sync
 
@@ -23,5 +19,4 @@ Why?
 * Wanted something that could work as a helper, not something I absolutly had to run all the time..
 
 # todo
-* taggo needs to do relative path symlinks
-* git
+* Dropbox
