@@ -1,7 +1,6 @@
 Splunk in a can, which uses the free 500mb/day version of Splunk as default.
 Splunk is an awesome log-analyzer, check out more information at http://www.splunk.com/
 
-* Splunk wont always run depending on the underlying filesystem. I noticed this while using boot2docker, so it might not work there..
 * This container is ment for testing Splunk, or running it with free version home, not on internet.
   * Configurations is not best practise
   * Security might not be optimal
