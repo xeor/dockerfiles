@@ -58,6 +58,7 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
 * `SPLUNK_SSO_ALLOW_FROM`: Either set an ip here for the proxy the request is coming from. Or if its a Docker container, you can link it as `proxy` like `--link nginx_reverse:proxy`, and we will detect it.
 * `SPLUNK_SSO_REMOTEUSER`: If you want Splunk to be able to do autologin via http-header from eg an intermidiate proxy. Set to eg `USER`. To debug (`http://splunk/debug/sso`). Should enable an extra admin-user as well with the username of the `USER` env. This setting also enables the SSO option in Splunk.
 * `SPLUNK_SSO_ADMIN`: username for an extra admin-user that we will add (with password "password"), only use this to get SSO with `SPLUNK_WEB_REMOTEUSER` to work. Its ment for SSO.
+* `SPLUNK_ENABLE_VERSION_CHECK`: Enable version update checker that displays at login screen. We disable this as default because it gives us nothing when running as a Docker image..
 
 # Config
 * The folder named `main_app` is basicly an empty app. You can use it (or a new app) as volumes mounted to something like `/opt/splunk/etc/apps/main`.
