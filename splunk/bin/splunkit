@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Todo:
+#   * Support for `splunkit file|folder`
+#   * Support for `find / | splunkit`
+#   * Better logic for opening the browser
+
+docker_ip=$(env | grep DOCKER_HOST | grep -oE "[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")
+
+if [[ -z ${docker_ip} ]]; then
+  # We might be using sockets, ie, we must be running the Docker daemon on localhost
+  docker_ip="127.0.0.1"
+fi
+
+echo "Assuming Docker host is at: ${docker_ip}"
+
+container_id=$(docker run -d -P xeor/splunk)
+echo "Container id: ${container_id}"
+
+url="http://${docker_ip}:$(docker port ${container_id} 8000 | awk -F: '{print $NF}')/en-US/app/search/search"
+
+echo "Splunk url: ${url}"
+
+echo -n "Waiting for Splunk to start: "
+until curl ${url} &> /dev/null; do
+  echo -n . 
+  sleep 1
+done
+echo " [done]"
+echo
+
+echo "Your Splunk is running @ ${url}. Use it, and press enter to destroy and cleanup the Docker container"
+
+open ${url}
+
+read
+echo "Removed container id $(docker rm -f ${container_id})"
+
