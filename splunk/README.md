@@ -15,6 +15,7 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
 * It will automaticly start to listen on 514 tcp/udp and set sourcetype to `syslog`
 
 ## Use-cases (and tips/tricks)
+Many of the use-cases below can be done much better with the use of the `./bin/splunkit` command. Read about it below.
 
 * Quickly spin up a "throw-away" Splunk to view your local /var/log/. ^c when done..
   * docker run -i -t -v /var/log/:/data/ -p 8000:8000 --rm xeor/splunk
@@ -59,6 +60,19 @@ Start the container with something like `docker run -d -P xeor/splunk` (to test 
 * `SPLUNK_SSO_REMOTEUSER`: If you want Splunk to be able to do autologin via http-header from eg an intermidiate proxy. Set to eg `USER`. To debug (`http://splunk/debug/sso`). Should enable an extra admin-user as well with the username of the `USER` env. This setting also enables the SSO option in Splunk.
 * `SPLUNK_SSO_ADMIN`: username for an extra admin-user that we will add (with password "password"), only use this to get SSO with `SPLUNK_WEB_REMOTEUSER` to work. Its ment for SSO.
 * `SPLUNK_ENABLE_VERSION_CHECK`: Enable version update checker that displays at login screen. We disable this as default because it gives us nothing when running as a Docker image..
+
+# splunkit
+In `./bin/splunkit` there is a shell script that takes care of many of the use-cases above.
+It is ment as an easy frontend to this container, and can be used both as a command you pipe the things you want to see in splunk to, or pass files/folders to it to index and view them.
+
+The `splunkit` script will take care of everything from starting the container, to trying to open the browser to the correct url. (at least on OSX). It will remove the container after you are done with it (hit enter at prompt).
+
+Example usages:
+
+* `splunkit`: Starts Splunk, opens url in browser
+* `splunkit some_file *.log`: Start Splunk, index wanted files, opens url in browser
+* `ps aux | splunkit`: Start Splunk, index the output of the command, opens url in browser
+* `ps aux | splunkit *.log`: Can be combined
 
 # Config
 * The folder named `main_app` is basicly an empty app. You can use it (or a new app) as volumes mounted to something like `/opt/splunk/etc/apps/main`.

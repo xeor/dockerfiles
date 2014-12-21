@@ -17,5 +17,5 @@ COPY main_app/ /opt/splunk/etc/apps/main/
 COPY init/ /init/
 
 VOLUME /opt/splunk/var/lib/splunk
-EXPOSE 8000 9997
+EXPOSE 8000 9997 514
 

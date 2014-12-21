@@ -1,9 +1,25 @@
 #!/bin/bash
 
 # Todo:
-#   * Support for `splunkit file|folder`
-#   * Support for `find / | splunkit`
 #   * Better logic for opening the browser
+
+image_name="xeor/splunk"
+
+function display_help {
+  echo "Syntax:"
+  echo "   command | $0"
+  echo " OR"
+  echo "   $0 [file|folder, ...]"
+  echo " OR"
+  echo "   command | $0 [file|folder, ...]"
+  echo " OR"
+  echo "   $0"
+}
+
+if echo "${1:-}" | grep -Eq "^(help|--help|-h)$"; then
+  display_help
+  exit 0
+fi
 
 docker_ip=$(env | grep DOCKER_HOST | grep -oE "[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")
 
@@ -14,7 +30,26 @@ fi
 
 echo "Assuming Docker host is at: ${docker_ip}"
 
-container_id=$(docker run -d -P xeor/splunk)
+if [[ $1 ]]; then
+  mounts=""
+  echo "Going trough files/folders you want to Splunk"
+  for m in $*; do
+    # Get the full path of the file/folder (including prefixed /)
+    # Bash is making this harder than its worth...
+    p=$(python -c "import os,sys; print os.path.realpath(sys.argv[1])" "${m}")
+
+    if [[ -e "${p}" ]]; then
+      mounts+="-v ${p}:/data${p} "
+      echo "  Adding ${p}"
+    else
+      echo "  Unable to add ${p}, not found"
+    fi
+  done
+  echo "done"
+  echo
+fi
+
+container_id=$(docker run -d -P ${mounts} ${image_name})
 echo "Container id: ${container_id}"
 
 url="http://${docker_ip}:$(docker port ${container_id} 8000 | awk -F: '{print $NF}')/en-US/app/search/search"
@@ -31,8 +66,25 @@ echo
 
 echo "Your Splunk is running @ ${url}. Use it, and press enter to destroy and cleanup the Docker container"
 
+if [[ ! -t 0 ]]; then
+  echo -n "Sending stdin to splunk: "
+  syslog_port=$(docker port ${container_id} 514 | awk -F: '{print $NF}')
+  buf=""
+  while read -r input; do
+    buf+="${input}\n"
+    echo -n .
+  done
+  echo -n " [done buffering]"
+  echo -e ${buf} | nc ${docker_ip} ${syslog_port}
+  echo " [done sending]"
+  read # Trailing newline on stdin..
+fi
+
+echo "Trying to open Splunk in the browser.."
 open ${url}
 
-read
+# http://stackoverflow.com/questions/27585415/pause-bash-script-after-while-read-stdin-loop
+read -p "Press enter to remove container, or ^c to keep it" < "$(tty 0>&2)"
+
 echo "Removed container id $(docker rm -f ${container_id})"
 
