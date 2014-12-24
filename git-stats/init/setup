@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir /www
+chown nginx /www
