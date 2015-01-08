@@ -6,5 +6,10 @@ chown nginx /www
 if [[ ${GIT_REPO} ]]; then
   [[ $(find /data/ | wc -l) != 1 ]] && { echo "/data/ is not empty, (mounted?), and you have sat GIT_REPO. Choose one!"; exit 1; }
   cd /data
-  git clone ${GIT_REPO} .
+
+  _try_again_sleep=${GIT_REPO_FAIL_RETRY:-10}
+  until git clone ${GIT_REPO} .; do
+    echo "Unable to clone, trying again in ${_try_again_sleep} seconds"
+    sleep ${_try_again_sleep}
+  done
 fi
