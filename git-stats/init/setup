@@ -2,3 +2,9 @@
 
 mkdir /www
 chown nginx /www
+
+if [[ ${GIT_REPO} ]]; then
+  ls -A /data && { echo "/data/ is not empty, (mounted?), and you have sat GIT_REPO. Choose one!"; exit 1; }
+  cd /data
+  git clone ${GIT_REPO} .
+fi
