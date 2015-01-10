@@ -11,3 +11,4 @@
   * run: docker run --net host -d -v $PWD/data:/var/spool/squid3 jpetazzo/squid-in-a-can
   * run: iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 3129
 * https://github.com/jpetazzo/critmux
+* https://remnux.org/docs/containers/malware-analysis/
