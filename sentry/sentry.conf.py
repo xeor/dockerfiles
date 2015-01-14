@@ -9,11 +9,11 @@ CONF_ROOT = os.path.dirname(__file__)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('DB_NAME', default='sentry'),
-        'USER': config('DB_USER', default='sentry'),
-        'PASSWORD': config('DB_USER', default='sentry'),
-        'HOST': config('DB_HOST', default='db'),
-        'PORT': config('DB_PORT', default=5432, cast=int)
+        'NAME': config('_DB_NAME', default='sentry'),
+        'USER': config('_DB_USER', default='sentry'),
+        'PASSWORD': config('_DB_PASS', default='sentry'),
+        'HOST': config('_DB_HOST', default='db'),
+        'PORT': config('_DB_PORT', default=5432, cast=int)
     }
 }
 
@@ -69,7 +69,7 @@ SENTRY_CACHE = 'sentry.cache.redis.RedisCache'
 # on a Python framework called Celery to manage queues.
 
 CELERY_ALWAYS_EAGER = False
-BROKER_URL = config('redis://redis:6379', default='redis://localhost:6379')
+BROKER_URL = config('BROKER_URL', default='redis://redis:6379')
 
 #################
 ## Rate Limits ##
@@ -111,7 +111,7 @@ SENTRY_TSDB = 'sentry.tsdb.redis.RedisTSDB'
 ################
 
 # You MUST configure the absolute URI root for Sentry:
-SENTRY_URL_PREFIX = config('SENTRY_URL')  # No trailing slash!
+SENTRY_URL_PREFIX = config('SENTRY_URL', default='http://localhost:8080')  # No trailing slash!
 
 # If you're using a reverse proxy, you should enable the X-Forwarded-Proto
 # and X-Forwarded-Host headers, and uncomment the following settings
@@ -135,11 +135,11 @@ SENTRY_WEB_OPTIONS = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_PORT = config('EMAIL_PORT', default=25, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 
 # The email address to send on behalf of
 SERVER_EMAIL = config('SERVER_EMAIL', default='sentry@localhost')

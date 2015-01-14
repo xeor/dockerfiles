@@ -1,0 +1,16 @@
+redis:
+  image: redis
+
+postgres:
+  image: postgres:9.4
+  environment:
+    - POSTGRES_USER=sentry
+    - POSTGRES_PASSWORD=sentry
+
+sentry:
+  build: .
+  links:
+    - postgres:db
+    - redis:redis
+  ports:
+    - 8080:8080

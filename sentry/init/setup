@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [[ ! -e /data/sentry.conf.py ]]; then
+  cp /sentry.conf.py /data/
+fi
+/usr/bin/sentry --config=/data/sentry.conf.py upgrade --noinput
