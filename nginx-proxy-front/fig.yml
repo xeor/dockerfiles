@@ -1,0 +1,7 @@
+nginxfront:
+  image: xeor/nginx-proxy-front
+  volumes:
+    domains:/domains
+  ports:
+    - "80:80"
+    - "443:443"
