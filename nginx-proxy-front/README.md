@@ -14,5 +14,6 @@ The container watches this folder, so if you add a domain, it will be included w
 * If want this proxy for localhost, you will need to use `--net host` when starting the container..
 * Let this container take care of ssl, so the ports you proxy to, should be NON ssl...
 
-
-To create a test self-signed certificate pair; `openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.pem -days 3650 -nodes`
+# certificates
+* csr request: `openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr`
+* self-signed (testing): `openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.pem -days 3650 -nodes`
