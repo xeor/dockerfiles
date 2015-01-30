@@ -13,7 +13,7 @@ server {
 server {
         gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
-        listen 443 ssl spdy deferred;
+        listen 443 ssl spdy;
         server_name __DOMAIN__;
         proxy_buffering off;
         error_log /proc/self/fd/2;
