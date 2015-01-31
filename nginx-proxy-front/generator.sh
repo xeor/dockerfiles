@@ -14,7 +14,13 @@ for i in $(ls  ./domains); do
 
   ([[ ${domain}} ]] && [[ ${remote} ]]) || continue
 
-  cat nginx.tmpl | sed -e "s@__FOLDER__@${i}@g" -e "s@__REMOTE__@${remote}@g" -e "s@__DOMAIN__@${domain}@g" >> "${tmpfile}"
+  if [[ -e "/domains/${i}/server.pem" ]]; then
+    certtype=pem
+  else
+    certtype=crt
+  fi
+
+  cat nginx.tmpl | sed -e "s@__FOLDER__@${i}@g" -e "s@__CERTTYPE__@${certtype}@g" -e "s@__REMOTE__@${remote}@g" -e "s@__DOMAIN__@${domain}@g" >> "${tmpfile}"
 done
 
 mv "${tmpfile}" "${nginxconfig}"

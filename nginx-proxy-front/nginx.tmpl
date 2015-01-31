@@ -20,7 +20,7 @@ server {
         access_log /proc/self/fd/1;
 
         ssl on;
-        ssl_certificate /domains/__FOLDER__/server.pem;
+        ssl_certificate /domains/__FOLDER__/server.__CERTTYPE__;
         ssl_certificate_key /domains/__FOLDER__/server.key;
         ssl_prefer_server_ciphers on;
         ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
