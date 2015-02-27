@@ -21,4 +21,4 @@ NOTE: This version of wetty is ment to be placed behind your own secure reverse 
 * Forced login to remote tmux session.
   * Generate a keypair, mounting the private key in the container as eg `/root/.ssh/id_rsa`, and the public part in whereever `authorized_keys` file you want to login to.
   * Mount up `/root/.ssh/known_hosts`
-  * Make a simple shell with something like `ssh -t user@remote -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux'`, and mount it as `/shell`
+  * Make a simple shell with something like `ssh -t user@remote -- /bin/sh -c 'exec tmux has-session && exec tmux attach -d || exec tmux'`, and mount it as `/shell`
