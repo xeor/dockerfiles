@@ -17,4 +17,8 @@ NOTE: This version of wetty is ment to be placed behind your own secure reverse 
 # tips/trics
 * Use it as is, play with and break it. It acts as a fullworthy CentOS 7 ( ehm, almost :) )
 * Use it as a base-image, and mix it with a bunch of your own tools. Easy nmap/network-toolbox over web..
-* Mount up a simple startupscript that uses a mounted ssh private-key to connect directly to another server via ssh and attaches to a tmux session.
+* Put it on a info-screen with some usefull terminal output. Using a Chrome tab-switcher to switch between tabs.
+* Forced login to remote tmux session.
+  * Generate a keypair, mounting the private key in the container as eg `/root/.ssh/id_rsa`, and the public part in whereever `authorized_keys` file you want to login to.
+  * Mount up `/root/.ssh/known_hosts`
+  * Make a simple shell with something like `ssh -t user@remote -- /bin/sh -c 'tmux has-session && exec tmux attach || exec tmux', and mount it as `/shell`
