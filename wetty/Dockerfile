@@ -9,7 +9,9 @@ RUN git clone https://github.com/nathanleclaire/wetty.git && \
     cd wetty && \
     npm install
 
-RUN sed 's@/bin/login@/bin/bash@' -i /wetty/app.js
+# We are symlinking /bin/bash to /shell if there is no /shell mounted. If there is a /shell
+# we will make it executable, so it can act as a standalone shell
+RUN sed 's@/bin/login@/shell@' -i /wetty/app.js
 
 COPY init/ /init/
 COPY supervisord.d/ /etc/supervisord.d/
