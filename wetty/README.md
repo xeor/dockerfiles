@@ -1,12 +1,17 @@
-* Original from https://github.com/nathanleclaire/wetty/blob/master/Dockerfile
+* Original from https://github.com/nathanleclaire/wetty/blob/master/Dockerfile, but;
 
-  * The original did a 'FROM node' which installs Debian. This one is on centos
-  * This one contains some more packages and more customized things.
-  * Fix for pam bug that affected both debian and centos and made it impossible to login
+  * The original did a 'FROM node' which installs Debian. This one is on centos 7.
+  * This one contains some more packages and more goodiness to act as a "first in line shell"
+  * Replaced the login prompt, with a direct access to a shell (a root shell).
 
-# Controll
-* Build it: docker built -t tagname .
-* Run: docker run -i -t -p 3000:3000 --rm tagname
+NOTE: This version of wetty is ment to be placed behind your own secure reverse http(s) proxy.
 
-# Info
-* centos7 base image
+# Running
+* minimal: docker run -i -t -p 3000:3000 --rm xeor/wetty
+* shell script(s) on login: `-v $PWD/start.sh:/etc/profile.d/start.sh`
+  * You can have as many as you want
+
+# tips/trics
+* Use it as is, play with and break it. It acts as a fullworthy CentOS 7 ( ehm, almost :) )
+* Use it as a base-image, and mix it with a bunch of your own tools. Easy nmap/network-toolbox over web..
+* Mount up a simple startupscript that uses a mounted ssh private-key to connect directly to another server via ssh and attaches to a tmux session.
