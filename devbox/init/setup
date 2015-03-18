@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +x
+
 echo "
 Tools available:
   * Python (with pip and ipython) and Node (with npm)
@@ -8,4 +10,3 @@ Tools available:
   * tar unzip make
 "
 
-$*

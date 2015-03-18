@@ -1,41 +1,32 @@
-FROM centos:centos7
+FROM xeor/base-centos
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-08-10-b
+ENV REFRESHED_AT 2015-03-18
 
-RUN yum localinstall -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
-
-#RUN yum update -y && yum clean all
-RUN yum install -y strace curl wget vim emacs-nox diffstat tmux \
-                   git mercurial \
-                   tar unzip make \
-                   postgresql && \
-                   yum clean all
+RUN yum update -y && \
+      yum install -y strace curl wget vim emacs-nox diffstat tmux gcc gcc-c++ zeromq3-devel \
+        git mercurial \
+        tar unzip make \
+        postgresql && \
+      yum clean all
 
 # Python stuff
 ADD requirements.txt ./
-RUN yum install -y python-setuptools && \
+RUN yum install -y python-setuptools python-devel && \
     easy_install pip && \
     pip install -r /requirements.txt
 
 # npm
-RUN yum install -y nodejs
-RUN curl https://www.npmjs.org/install.sh | clean=no sh
-
-# Other customizations
-RUN mkdir /data
-RUN mkdir /setup
+RUN yum install -y nodejs && \
+    curl https://www.npmjs.com/install.sh | clean=no sh
 
 ## Ninjab (the prompt)
-RUN cd /setup && \
+RUN cd /root && \
     git clone https://github.com/xeor/ninjab.git && \
-    echo '. /setup/ninjab/loader' >> /.profile
+    echo '. /root/ninjab/loader' >> /.profile
+
+COPY init/ /init/
 
 VOLUME /data
 WORKDIR /data
-
-ADD start /start
-RUN chmod +x /start
-ENTRYPOINT ["/start"]
-CMD ["bash", "-l"]
 

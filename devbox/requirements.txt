@@ -1,1 +1,11 @@
-ipython==2.1.0
+# ipython stuff
+ipython
+pyzmq
+jinja2
+tornado
+jsonschema
+
+# usefull libs
+python-dateutil
+plotly
+requests
