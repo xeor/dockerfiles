@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# TODO; how to do something like this inside a container?
+#echo 40960 > /proc/sys/fs/inotify/max_user_watches
+
+mv /usr/local/crashplan/conf /usr/local/crashplan/conf.default
+ln -s /data/conf /usr/local/crashplan/conf
+mv /usr/local/crashplan/log /usr/local/crashplan/log.default
+ln -s /data/log /usr/local/crashplan/log
+mv /var/lib/crashplan /var/lib/crashplan.default
+ln -s /data/crashplan /var/lib/crashplan
+
+[[ ! -d /data/conf ]] && cp -r /usr/local/crashplan/conf.default /data/conf
+[[ ! -d /data/log ]] && cp -r /usr/local/crashplan/log.default /data/log
+[[ ! -d /data/crashplan ]] && cp -r /var/lib/crashplan.default /data/crashplan
+
+/usr/local/crashplan/bin/CrashPlanEngine start
+
+mkdir -p ~/.vnc && x11vnc -storepasswd ${vncpass:-secret} ~/.vnc/passwd
+
+export GEOMETRY="${SCREEN_WIDTH}x${SCREEN_HEIGHT}x${SCREEN_DEPTH}"
+cd /usr/local/crashplan/
+. /usr/local/crashplan/install.vars
+. /usr/local/crashplan/bin/run.conf
+xvfb-run --server-args="$DISPLAY -screen 0 $GEOMETRY -ac +extension RANDR" \
+  ${JAVACOMMON} ${GUI_JAVA_OPTS} -classpath "./lib/com.backup42.desktop.jar:./lang:./skin" com.backup42.desktop.CPDesktop > log/ui_output.log 2> log/ui_error.log &
+sleep 5
+x11vnc -forever -usepw -shared -rfbport 5900 -display $DISPLAY
+echo
