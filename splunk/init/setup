@@ -26,7 +26,7 @@ if [[ ${SPLUNK_SSO} ]]; then
 fi
 
 if [[ ${SPLUNK_SSL} ]]; then
-  echo "enableSplunkWebSSL = 1" >> /opt/splunk/etc/system/local/web.conf
+  echo "enableSplunkWebSSL = True" >> /opt/splunk/etc/system/local/web.conf
 fi
 
 [[ ${SPLUNK_SERVERNAME} ]] && sed "s/\(serverName = \).*/\1${SPLUNK_SERVERNAME}/" -i /opt/splunk/etc/system/local/server.conf
