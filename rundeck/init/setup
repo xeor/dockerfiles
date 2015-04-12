@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function fix_new_dir {
+  if [[ ! -d "${2}" ]]; then
+    cp -prv "${1}" "${2}"
+  fi
+  rm -rf "${1}"
+  ln -s "${2}" "${1}"
+}
+
+fix_new_dir /rundeck/server/config /data/config
+fix_new_dir /rundeck/server/logs /data/logs
+fix_new_dir /rundeck/etc /data/etc
+fix_new_dir /rundeck/projects /data/projects
+
+sed -i "s/^grails.serverURL=.*/rails.serverURL=${HOST}/g" /data/config/rundeck-config.properties

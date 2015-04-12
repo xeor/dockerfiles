@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /rundect
+java -jar rundeck.jar
