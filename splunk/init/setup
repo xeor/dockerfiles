@@ -25,6 +25,10 @@ if [[ ${SPLUNK_SSO} ]]; then
   ./bin/splunk add user "${SPLUNK_SSO_ADMIN}" -role admin -password password
 fi
 
+if [[ ${SPLUNK_SSL} ]]; then
+  echo "enableSplunkWebSSL = True" >> /opt/splunk/etc/system/local/web.conf
+fi
+
 [[ ${SPLUNK_SERVERNAME} ]] && sed "s/\(serverName = \).*/\1${SPLUNK_SERVERNAME}/" -i /opt/splunk/etc/system/local/server.conf
 [[ ${SPLUNK_SERVERNAME} ]] && sed "s/\(host = \).*/\1${SPLUNK_SERVERNAME}/" -i /opt/splunk/etc/system/local/inputs.conf
 
