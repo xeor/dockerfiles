@@ -1,9 +1,11 @@
-# ipython stuff
+# ipython (notebook) stuff
 ipython
 pyzmq
 jinja2
 tornado
 jsonschema
+terminado
+matplotlib
 
 # usefull libs
 python-dateutil

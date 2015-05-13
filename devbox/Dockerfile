@@ -5,6 +5,7 @@ ENV REFRESHED_AT 2015-03-18
 
 RUN yum update -y && \
       yum install -y strace curl wget vim emacs-nox diffstat tmux gcc gcc-c++ zeromq3-devel \
+        freetype-devel libpng-devel \
         git mercurial \
         tar unzip make \
         postgresql && \
