@@ -4,7 +4,7 @@ MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2015-05-13
 
 # Crashplan itself (at least as much as we can. It generates some ID's at install)
-RUN yum install -y tar && curl -L http://download.code42.com/installs/linux/install/CrashPlan/CrashPlan_4.2.0_Linux.tgz | tar -zx && \
+RUN yum install -y tar && curl -L http://download.code42.com/installs/linux/install/CrashPlan/CrashPlan_4.3.0_Linux.tgz | tar -zx && \
     cd /CrashPlan-install && \
     sed -i 's/^more /: /g' install.sh && \
     (echo; echo; echo yes; echo ; echo y; echo; echo /backups; echo y; echo; echo; echo y; echo) | ./install.sh && \
