@@ -6,7 +6,7 @@ set -u
 ips=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"/inspects/${2}.json\", 'r'))['Config']['Env'] if i.startswith('ACT_NETACCESS') ])")
 
 case ${3} in
-  create)
+  create|running)
     # Check if rule exist, if not, add
     for i in ${ips}; do
       iptables -C FORWARD -d ${i} -j ACCEPT 2> /dev/null || iptables -I FORWARD -d ${i} -j ACCEPT 2> /dev/null
