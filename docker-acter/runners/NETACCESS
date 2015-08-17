@@ -2,18 +2,25 @@
 
 set -u
 
+[[ ${3} == "create" ]] && exit 0 # We are not ready.. There is no ip to be collected yet
+
+json_file="/inspects/${2}_start.json"
+[[ -e ${json_file} ]] || json_file="/inspects/${2}_running.json"
+
 # Still, I think this is cleaner than using awk to do this, even tho it might be shorter :)
-ips=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"/inspects/${2}.json\", 'r'))['Config']['Env'] if i.startswith('ACT_NETACCESS') ])")
+ips=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"/${json_file}\", 'r'))['Config']['Env'] if i.startswith('ACT_NETACCESS') ])")
+container_ip=$(python -c "import json; print json.load(open(\"/${json_file}\", 'r'))['NetworkSettings']['IPAddress']")
 
 case ${3} in
-  create|running)
+  start|running) # start (not create), because ip isnt there when create event is issued
     # Check if rule exist, if not, add
     for i in ${ips}; do
-      iptables -C FORWARD -d ${i} -j ACCEPT 2> /dev/null || iptables -I FORWARD -d ${i} -j ACCEPT 2> /dev/null
+      iptables -C FORWARD -s ${container_ip} -d ${i} -j ACCEPT -m comment --comment "docker-acter:${2}" 2> /dev/null || iptables -I FORWARD -s ${container_ip} -d ${i} -j ACCEPT  -m comment --comment "docker-acter:${2}" 2> /dev/null
     done
     ;;
   die)
     for i in ${ips}; do
-      iptables -D FORWARD -d ${i} -j ACCEPT 2> /dev/null
+      # iptables -S | sed "/docker-acter:${2}/s/-A/iptables -D/e" # Might be usefull if the one beneth is not stable.. Keeping as note
+      iptables -D FORWARD -s ${container_ip} -d ${i} -j ACCEPT -m comment --comment "docker-acter:${2}" 2> /dev/null
     done
 esac

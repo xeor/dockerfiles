@@ -1,7 +1,9 @@
 This container runs code based on Docker containers environment-variables it sees.
 
 The environment variable must start with `ACT_`, example `ACT_FOO`.
-Example, if you want to do something when `ACT_FOO` is detected (run a container with `-e "ACT_FOO=bar"`), make a script and map it under `/runners/FOO`, and you are done. This container will now run `/runners/FOO bar 5795ee560ff5c4f85d57820c4ac7474963c3f0f882f372db6ef515832dee22fb create` ("create" is the eventtype and all of the events docker suports is sent to the runner, one by one). The information from docker inspect CONTAINER_ID is saved as a json file in `/inspects/5795ee560ff5c4f85d57820c4ac7474963c3f0f882f372db6ef515832dee22fb.json` where your script can grab it.
+Example, if you want to do something when `ACT_FOO` is detected (run a container with `-e "ACT_FOO=bar"`), make a script and map it under `/runners/FOO`, and you are done. This container will now run `/runners/FOO bar 5795ee560ff5c4f85d57820c4ac7474963c3f0f882f372db6ef515832dee22fb create` ("create" is the eventtype and all of the events docker suports is sent to the runner, one by one). The information from docker inspect CONTAINER_ID is saved as a json file in `/inspects/5795ee560ff5c4f85d57820c4ac7474963c3f0f882f372db6ef515832dee22fb_create.json` where your script can grab it.
+This json file will be overwritten every time we have a valid ACT_ environment-variable, is detected, and for that specific event. That might not happend so much tho :)
+Some information is not available in all state jsons; like IPAddress..
 
 We will also do an initial check on all running containers, and in those cases, we will use the status `running`
 
