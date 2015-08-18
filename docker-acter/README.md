@@ -26,3 +26,5 @@ The container needs a little more access than usual; `docker run -d -v /var/run/
 NETACCESS prepends iptables forward ACCEPT rules to the FORWARD chain, so your containers can now go places based on your environment-variables.
 You can also specify several `-e ACT_NETACCESS` if you want. They will all be added.
 The rules will be removed on the Docker event `die` and added on 'create'
+
+We are not setting any ESTABLISHED,RELATED rules. So if you example want a client (10.1.2.3) to be able to access your container, you will need to add that to ACT_NETACCESS as well..
