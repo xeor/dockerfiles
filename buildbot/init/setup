@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if ! ls /data &> /dev/null; then
+  echo "You need to mount a /data directory"
+  exit 1
+fi
+
+if ! ls /data/buildbot &> /dev/null; then
+  if [[ ${IS_MASTER} ]]; then
+    echo "Creating buildbot master"
+    /usr/bin/buildbot create-master --relocatable -r /data/buildbot
+  else
+    echo "Creating buildbot slave"
+    /usr/bin/buildslave create-slave /data/buildbot ${MASTER_ADDR:-"master:9989"} ${SLAVE_NAME:-slave} ${PASSWORD:-password}
+  fi
+else
+  if [[ ${IS_MASTER} ]]; then
+    echo "Running buildbot upgrade-master in case of new version"
+    /usr/bin/buildbot upgrade-master /data/buildbot
+  else
+    echo "Running buildslave upgrade in case of new version"
+    /usr/bin/buildslave upgrade-slave /data/buildbot
+  fi
+fi

@@ -1,0 +1,19 @@
+master:
+  build: .
+  ports:
+    - "8888:8080"
+  environment:
+    ACT_NETACCESS: "10.0.10.5"
+    IS_MASTER: true
+  volumes:
+    - "data/master:/data"
+
+slave:
+  build: .
+  links:
+    - "master"
+  environment:
+    SLAVE_NAME: slave1
+  volumes:
+    - "data/slave1:/data"
+
