@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ls /domains &> /dev/null || {echo "Need a mounted /domains"; exit 1;}
+
 chmod +x /generator.sh
 
 # If it fails, we shoulnt die, or we will kill the init/start script
