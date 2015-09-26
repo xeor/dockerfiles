@@ -1,9 +1,9 @@
 FROM xeor/base-centos-daemon
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2015-09-26
+ENV REFRESHED_AT 2015-01-29
 
-RUN yum upgrade -y && yum install -y nginx inotify-tools
+RUN yum install -y nginx inotify-tools
 
 COPY init/ /init/
 COPY supervisord.d/ /etc/supervisord.d/

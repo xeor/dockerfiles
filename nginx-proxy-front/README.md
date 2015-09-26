@@ -12,7 +12,8 @@ Put 1 folder per domain (vhost), inside the `./domains/` folder in the format `d
 The container watches this folder, so if you add a domain, it will be included without you having to restart the container.
 
 * If want this proxy for localhost, you will need to use `--net host` when starting the container..
-* Let this container take care of ssl, so the ports you proxy to, should be NON ssl...
+* Let this container take care of ssl, so the ports you proxy to, should be NON ssl/tls...
+* See the generator.sh file for what it supports :)
 
 # certificates
 * example with cheapssl
