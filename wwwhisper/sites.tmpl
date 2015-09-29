@@ -1,10 +1,5 @@
 {{/* Same as https://github.com/jwilder/nginx-proxy/blob/master/nginx.tmpl, except shortened */}}
 
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    '' close;
-}
-
 {{ range $protectpath, $containers := groupByMulti $ "Env.WWWHISPER_PROTECT" "," }}
 location /{{ $protectpath }}/ {
   {{ range $index, $value := $containers }}
