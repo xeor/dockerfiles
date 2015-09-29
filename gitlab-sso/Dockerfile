@@ -9,4 +9,4 @@ FROM sameersbn/gitlab:8.0.2
 # RUN sed '/cd ${GITLAB_INSTALL_DIR}/a sed "s/\\(.*\\)\\(if user\\)/\\1if \\!user; user = User.find_by_email(request.headers[\\"HTTP_USER\\"]) end\\n\\1\\2/" -i app/controllers/application_controller.rb' -i /app/init
 
 # In the new version, we can do this at image buildtime, since the file is there ready for us :) Keeping the above for reference
-RUN sed "s/\\(.*\\)\\(if user\\)/\\1if \\!user; user = User.find_by_email(request.headers[\\"HTTP_USER\\"]) end\\n\\1\\2/" -i /home/git/gitlab/app/controllers/application_controller.rb
+RUN sed "s/\\(.*\\)\\(if user\\)/\\1if \\!user; user = User.find_by_email(request.headers[\"HTTP_USER\"]) end\\n\\1\\2/" -i /home/git/gitlab/app/controllers/application_controller.rb
