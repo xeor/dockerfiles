@@ -1,4 +1,4 @@
-FROM sameersbn/gitlab:latest
+FROM sameersbn/gitlab:8.0.2
 
 # We need to prepend something to app/controllers/application_controller.rb, but we need app/init to do it. So this is a sed line that injects another sed line to app/init.
 # The line we are injecting to app/init (after "cd ${GITLAB_INSTALL_DIR}") is:
