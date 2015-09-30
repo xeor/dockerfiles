@@ -17,6 +17,10 @@ except OSError:
 
 
 def handler(docker_id, status):
+    if '/' in docker_id:
+        # When we are triggered by newly downloaded images, the docker_id will be the full image-path
+        # instead of an uniq ID we can inspect. Bail out, so we wont crash..
+        return
     procs = []
     inspect = c.inspect_container(docker_id)
     valid_events = [e for e in inspect['Config']['Env'] if e.startswith('ACT_')]
