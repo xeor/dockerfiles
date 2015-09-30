@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -u
+
+[[ -f /run/nginx.pid ]] || /usr/sbin/nginx
+json_file="/inspects/${2}_start.json"
+[[ -f ${json_file} ]] || json_file="/inspects/${2}_create.json"
+[[ -f ${json_file} ]] || json_file="/inspects/${2}_running.json"
+
+domain=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"${json_file}\", 'r'))['Config']['Env'] if i.startswith('ACT_WEBFEWD') ])")
+
+# There can be multiple host-ports.. But this is suposed to be a simple thing. For now, just worry about the first.
+hostport=$(python -c "import json; print json.load(open(\"${json_file}\", 'r'))['NetworkSettings']['Ports']['80/tcp'][0]['HostPort']")
+
+case ${3} in
+  start|running)
+cat << EOF > /etc/nginx/conf.d/${domain}.conf
+server {
+  server_name ${domain};
+  listen 8888;
+  location / {
+    proxy_set_header Host \$host;
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_pass http://localhost:${hostport};
+  }
+}
+EOF
+    /usr/sbin/nginx -s reload
+    ;;
+  die)
+    rm -f /etc/nginx/conf.d/${domain}.conf
+    /usr/sbin/nginx -s reload
+esac

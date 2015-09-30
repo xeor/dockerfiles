@@ -21,10 +21,23 @@ Remember that your runners needs to be executable (+x), and the docker socket (`
 
 Make a firewall rule for what you want to block as default. Something like `iptables -I FORWARD -d 10.0.2.0/24 -j DROP`
 
-The container needs a little more access than usual; `docker run -d -v /var/run/docker.sock:/var/run/docker.sock --cap-add NET_ADMIN --net=host xeor/docker-acter` should do the trick.
+This runner needs special network access; `docker run -d -v /var/run/docker.sock:/var/run/docker.sock --cap-add NET_ADMIN --net=host xeor/docker-acter` should do the trick.
 
 NETACCESS prepends iptables forward ACCEPT rules to the FORWARD chain, so your containers can now go places based on your environment-variables.
 You can also specify several `-e ACT_NETACCESS` if you want. They will all be added.
 The rules will be removed on the Docker event `die` and added on 'create'
 
 We are not setting any ESTABLISHED,RELATED rules. So if you example want a client (10.1.2.3) to be able to access your container, you will need to add that to ACT_NETACCESS as well..
+
+## WEBFEWD
+`webfewd` stands for Web Forward a set Environmen-variable from Wildcard DNS.. Or something... :)
+
+It can be used togheter with a wildcard nginx redirection to spin up web-domains based on an environment variable you are setting on your Docker container.
+
+Example;
+* Start this container with something like; `docker run -d -v /var/run/docker.sock:/var/run/docker.sock -p 8008:80 --net=host ...`
+* Given the dns record `*.dev-domain`, being redirected to `1.2.3.4`, you can have nginx on `1.2.3.4:80` redirecting traffic that goes to `*.dev-domain` to `localhost:8008`.
+* If you start a container now with `-e ACT_WEBFEWD=test1.dev-domain`, this container will now detect the container, and generate nginx config that sends `test1.dev-domain` to the container with the environment-variable `ACT_WEBFEWD=test1.dev-domain` and whatever port that it uses to listen on for web (port 80!).
+
+We need docker.sock mounting to see docker events. And we need to be on `--net=host` so we can forward to localhost.
+
