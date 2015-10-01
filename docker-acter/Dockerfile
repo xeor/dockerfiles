@@ -16,4 +16,6 @@ RUN chmod +x /worker.py
 COPY runners/ /runners
 RUN chmod +x /runners/*
 
+COPY nginx.conf /etc/nginx/nginx.conf
+
 CMD ["/worker.py"]
