@@ -37,7 +37,7 @@ It can be used togheter with a wildcard nginx redirection to spin up web-domains
 Example;
 * Start this container with something like; `docker run -d -v /var/run/docker.sock:/var/run/docker.sock -p 8008:80 --net=host ...`
 * Given the dns record `*.dev-domain`, being redirected to `1.2.3.4`, you can have nginx on `1.2.3.4:80` redirecting traffic that goes to `*.dev-domain` to `localhost:8008`.
-* If you start a container now with `-e ACT_WEBFEWD=test1.dev-domain`, this container will now detect the container, and generate nginx config that sends `test1.dev-domain` to the container with the environment-variable `ACT_WEBFEWD=test1.dev-domain` and whatever port that it uses to listen on for web (port 80!).
+* If you start a container now with `-e ACT_WEBFEWD=test1.dev-domain`, this container will now detect the container, and generate nginx config that sends `test1.dev-domain` to the container with the environment-variable `ACT_WEBFEWD=test1.dev-domain` and whatever port that it uses to listen on for web (port 80 or 8080!).
 
 We need docker.sock mounting to see docker events. And we need to be on `--net=host` so we can forward to localhost.
 
