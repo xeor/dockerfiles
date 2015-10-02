@@ -12,6 +12,9 @@ domain=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.
 # There can be multiple host-ports.. But this is suposed to be a simple thing. For now, just worry about the first.
 hostport=$(python -c "import json; print json.load(open(\"${json_file}\", 'r'))['NetworkSettings']['Ports']['80/tcp'][0]['HostPort']")
 
+# Check port 8080 if 80 didnt do it. 8080 is too common to ignore :)
+[[ ${hostport} ]] || hostport=$(python -c "import json; print json.load(open(\"${json_file}\", 'r'))['NetworkSettings']['Ports']['8080/tcp'][0]['HostPort']")
+
 case ${3} in
   start|running)
 cat << EOF > /etc/nginx/conf.d/${domain}.conf
