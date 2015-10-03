@@ -41,3 +41,22 @@ Example;
 
 We need docker.sock mounting to see docker events. And we need to be on `--net=host` so we can forward to localhost.
 
+## NAT - Tell a router that it should forward packages to us (not done!)
+* First of all, this runner is not done. Its mostly done, and you can look at how it works. It kinda works for mikrotik but its not 100%
+* The idea is to use add nat rules in your gateway when the container starts so it can start receiving traffic.
+* A container started with example `-e ACT_NAT=80` will contact the gateway and make sure the dockerd host machine gets port 80.
+* You can also start it with `-e ACT_NAT=80:8000` if you want the router ip of port 80 to be routed to this dockerd host port 8000.
+* We wont do anything unless this container exposes the port you want.
+
+This runner needs special network access; `docker run -d -v /var/run/docker.sock:/var/run/docker.sock --net=host xeor/docker-acter` should do the trick. This is to get the IP we need to make the opening to. Alternativ, you can run this container with `-e PUBIP=1.2.3.4`.
+
+It works with contacting, checking and creating NAT rules on your gateway using the port specified as inbound port.
+If the port is already defined, we wont override the rule unless you also start the container with `-e NAT_FORCE=true` (true being any value).
+
+You must define a `NAT_VENDOR` as well, currently supported is only `mikrotik`.
+
+* `mikrotik` nat-vendor needs;
+  * `MIKROTIK_LOGIN`, if other than `admin@10.0.0.1`
+  * The ssh key that got access to firewall mounted in as `/mikrotik_ssh.key`.
+  * `MIKROTIK_ININTERFACE` if other than `ether1-gateway`
+  *

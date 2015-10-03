@@ -1,0 +1,118 @@
+#!/bin/bash
+
+# FIXME;
+# This is not done, but almost works.. Next thing is to start testing using ssh
+# But its a scary thing to have the key all over the place.. So I stopped mid-ways
+
+set -u
+DEBUG=true
+
+function get_env {
+  name=${1}
+  [[ ${name} ]] || return
+
+  # Still, I think this is cleaner than using awk to do this, even tho it might be shorter :)
+  value=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"/${json_file}\", 'r'))['Config']['Env'] if i.startswith(\"${name}\") ])")
+  [[ ${value} ]] && echo ${value} || echo "${2}"
+}
+
+function debug {
+  [[ ${DEBUG} ]] || return
+  echo "${1:-}" >> /NAT_debug
+}
+
+# newline
+debug
+
+[[ ${3} == "create" ]] && exit 0 # We are not ready.. There is no ip to be collected yet
+
+json_file="/inspects/${2}_start.json"
+[[ -e ${json_file} ]] || json_file="/inspects/${2}_running.json"
+
+nat_rules=$(get_env ACT_NAT)
+debug "nat_rules: ${nat_rules}"
+
+container_ip=$(python -c "import json; print json.load(open(\"/${json_file}\", 'r'))['NetworkSettings']['IPAddress']")
+debug "container_ip: ${container_ip}"
+
+nat_vendor=$(get_env NAT_VENDOR)
+[[ ${nat_vendor} ]] || exit 1
+debug "nat_vendor: ${nat_vendor}"
+
+nat_force=$(get_env NAT_FORCE)
+debug "nat_force: ${nat_force}"
+
+# Get ip from PUBIP if defined, or try to get from ip route..
+providedip=$(get_env PUBIP)
+pubip=${providedip:-$(ip route show | grep -Ev "^default|docker[0-9]" | grep -Eo " src [0-9.]+ " | cut -d" " -f 3)}
+debug "pubip: ${pubip}"
+
+case ${nat_vendor} in
+  mikrotik)
+    login=$(get_env MIKROTIK_LOGIN "admin@10.0.0.1")
+    debug "login: ${login}"
+
+    ininterface=$(get_env MIKROTIK_ININTERFACE "ether1-gateway")
+    debug "ininterface: ${ininterface}"
+    ;;
+  *)
+    echo "Not a valid nat_vendor"
+    exit 1
+esac
+
+function remove {
+  # $1 is like "80" or "80:8000" (which means that we should use 80 from outside to 8000 on the host)
+  debug "Removing ${1}"
+
+  inport=$(echo ${1} | awk -F: '{print $2}')
+  debug "inport: ${inport}"
+
+  hostport=$(echo ${1} | awk -F: '{print $1}')
+  debug "hostport: ${hostport}"
+
+  case ${nat_vendor} in
+    mikrotik)
+      ssh -q ${login} -i /mikrotik_ssh.key "ip firewall nat remove [find chain=dstnat and action=dst-nat and to-addresses=\"${pubip}\" and to-ports=\"${hostport}\" and protocol=tcp and in-interface=\"${ininterface}\" and dst-port=\"${hostport}\" and comment=\"docker-act\"]"
+      ;;
+    esac
+}
+
+function add {
+  debug "Add ${1}"
+
+  inport=$(echo ${1} | awk -F: '{print $2}')
+  debug "inport: ${inport}"
+
+  hostport=$(echo ${1} | awk -F: '{print $1}')
+  debug "hostport: ${hostport}"
+
+  [[ ${inport } ]] || inport=${hostport}
+  case ${nat_vendor} in
+    mikrotik)
+      if ssh -q ${login} -i /mikrotik_ssh.key "ip firewall nat print without-paging detail terse where chain=dstnat and action=dst-nat and to-addresses=\"${pubip}\" and to-ports=\"${hostport}\" and protocol=tcp and in-interface=\"${ininterface}\" and dst-port=\"${hostport}\" and comment=\"docker-act\"" | grep action &> /dev/null; then
+        if [[ ${nat_force} ]]; then
+          echo "Removing rule"
+          remove
+        else
+          echo "Rule already exists, ignoring.."
+          return
+        fi
+        echo "Create"
+        ssh -q ${login} -i /mikrotik_ssh.key "ip firewall nat add chain=dstnat action=dst-nat to-addresses=\"${pubip}\" to-ports=\"${hostport}\" protocol=tcp in-interface=\"${ininterface}\" dst-port=\"${hostport}\" comment=\"docker-act\""
+      fi
+      ;;
+    esac
+}
+
+case ${3} in
+  start|running)
+    for n in ${nat_rules}; do
+      add ${n}
+    done
+    ;;
+  die)
+    for n in ${nat_rules}; do
+      remove ${n}
+    done
+    ;;
+esac
