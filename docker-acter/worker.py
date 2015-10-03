@@ -2,11 +2,15 @@
 
 import os
 import json
+import time
+import logging
 import subprocess
 from docker import Client
 
 runner_dir = '/runners'
 inspect_dir = '/inspects'
+
+logging.basicConfig(filename='/worker-err.log', filemode='a', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 c = Client(base_url='unix://var/run/docker.sock')
 
@@ -52,4 +56,10 @@ for i in c.containers(filters={'status': 'running'}):
 
 # c.events() returns a blocking generator
 for event in c.events(decode=True):
-    handler(docker_id=event['id'], status=event['status'])
+    try:
+        handler(docker_id=event['id'], status=event['status'])
+    except Exception, e:
+        # We shoulnt die, but log.. sleep 1 second so we wont loop..
+        # Many things can go wrong in the handler
+        logging.exception(e)
+        time.sleep(1)
