@@ -13,6 +13,8 @@ It is up to you what happens next :)
 
 Remember that your runners needs to be executable (+x), and the docker socket (`-v /var/run/docker.sock:/var/run/docker.sock`) needs to be mounted.
 
+Check out https://docs.docker.com/reference/api/docker_remote_api/ for a good list of events that docker triggers that you can use in the runners.
+
 # Included runners
 
 ## NETACCESS - Controll access subnets (usually, your local lan)
