@@ -2,12 +2,22 @@
 
 set -u
 
+function get_env {
+  name=${1}
+  [[ ${name} ]] || return
+
+  # Still, I think this is cleaner than using awk to do this, even tho it might be shorter :)
+  value=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"/${json_file}\", 'r'))['Config']['Env'] if i.startswith(\"${name}\") ])")
+  [[ ${value} ]] && echo ${value} || echo "${2}"
+}
+
 [[ -f /run/nginx.pid ]] || /usr/sbin/nginx
 json_file="/inspects/${2}_start.json"
 [[ -f ${json_file} ]] || json_file="/inspects/${2}_create.json"
 [[ -f ${json_file} ]] || json_file="/inspects/${2}_running.json"
 
-domain=$(python -c "import json; print ' '.join([ i.split('=')[1] for i in json.load(open(\"${json_file}\", 'r'))['Config']['Env'] if i.startswith('ACT_WEBFEWD') ])")
+domain=$(get_env ACT_WEBFEWD)
+removeondie=$(get_env WEBFEWD_REMOVEONDIE)
 
 # There can be multiple host-ports.. But this is suposed to be a simple thing. For now, just worry about the first.
 hostport=$(python -c "import json; print json.load(open(\"${json_file}\", 'r'))['NetworkSettings']['Ports']['80/tcp'][0]['HostPort']")
@@ -31,6 +41,7 @@ EOF
     /usr/sbin/nginx -s reload
     ;;
   die)
+    [[ ${removeondie} ]] || exit 1
     rm -f /etc/nginx/conf.d/${domain}.conf
     /usr/sbin/nginx -s reload
 esac
