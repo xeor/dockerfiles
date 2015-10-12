@@ -1,3 +1,7 @@
+{{ if (exists "/sites_top.include") }}
+include /sites_top.include;
+{{ end }}
+
 {{/* Same as https://github.com/jwilder/nginx-proxy/blob/master/nginx.tmpl, except shortened */}}
 
 {{ range $protectpath, $containers := groupByMulti $ "Env.WWWHISPER_PROTECT" "," }}
@@ -23,10 +27,10 @@ location /{{ $protectpath }}/ {
     {{ end }}
   {{ end }}
 
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
-  proxy_set_header Connection $connection_upgrade;
-  proxy_set_header user $user;
-  proxy_set_header Host $host;
+  {{ if (exists (printf "/sites.d/%s" $host)) }}
+    include {{ printf "/sites.d/%s" $host }};
+  {{ else if (exists "/sites.default") }}
+    include /sites.default;
+  {{ end }}
 }
 {{ end }}
