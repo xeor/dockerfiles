@@ -25,3 +25,7 @@ When all you need is a tiny change, like an authentication plugin (the example).
 To compile it, clone this repo, go into the `RemoteUserJira` folder, and run `docker run -i -t -v $PWD:/data xeor/atlassian-dev`. When it sais it have started jira, kill it, and your .jar will be in the `./target` directory.
 
 PS: There is probably a better way to compile atlassian plugins using some of the `atlas-` commands. Please share, I'm nor a java-developer, and just wanted a quick way of doing this, and a quick plugin (which I coulnt find). Lots of the code is from https://github.com/glorang/RemoteUserConfluenceAuth / https://wiki.warren.bz/pages/viewpage.action?pageId=9338886
+
+## Use the RemoteUserConfluence plugin
+* See the notes about the Jira plugin. Its basicly the same :)
+* I got an error `java.lang.ClassCastException: com.atlassian.confluence.security.seraph.ConfluenceUserPrincipal cannot be cast to com.atlassian.user.User` suddenly after I had setup confluence using this plugin once. It went away after I got to the home-page. It happened when I pressed "furter configuration" after the setup.
