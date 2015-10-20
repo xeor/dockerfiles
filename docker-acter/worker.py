@@ -12,7 +12,11 @@ inspect_dir = '/inspects'
 
 logging.basicConfig(filename='/worker-err.log', filemode='a', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-c = Client(base_url='unix://var/run/docker.sock')
+api_version = os.environ.get('DOCKER_API_VERSION', None)
+if api_version:
+    c = Client(base_url='unix://var/run/docker.sock', version=api_version)
+else:
+    c = Client(base_url='unix://var/run/docker.sock')
 
 try:
     os.mkdir(inspect_dir)
