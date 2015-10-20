@@ -27,6 +27,22 @@ hostport=$(python -c "import json; print json.load(open(\"${json_file}\", 'r'))[
 
 case ${3} in
   start|running)
+    areweready=false
+    if [[ -x "/WEBFEWD_nginx_reload_ready" ]]; then
+      echo "Running WEBFEWD_nginx_reload_ready to check if we are ready to reload nginx"
+      for i in $(seq 1 ${WEBFEWD_nginx_reload_check_max:-30}); do
+        if /WEBFEWD_nginx_reload_ready ${hostport} &> /dev/null; then
+          echo ok
+          areweready=true
+          break
+        else
+          echo -n .
+        fi
+      done
+    else
+      areweready=true
+    fi
+if ${areweready}; then
 cat << EOF > /etc/nginx/conf.d/${domain}.conf
 server {
   server_name ${domain};
@@ -39,6 +55,9 @@ server {
 }
 EOF
     /usr/sbin/nginx -s reload
+else
+  echo "$(date) We never became ready to replace nginx config for ${domain} on port ${hostport}" >> worker-err.log
+fi
     ;;
   die)
     [[ ${removeondie} ]] || exit 1
