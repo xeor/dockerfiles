@@ -54,6 +54,10 @@ server {
   }
 }
 EOF
+    # Just in case of something unexcpected. Like the;
+    # "nginx: [emerg] could not build the server_names_hash, you should increase server_names_hash_bucket_size: 64"
+    # error, that bit me. Better to bail, than leave nginx dead.
+    /usr/sbin/nginx -t || { echo " * ERROR: nginx -t didnt succeed, bailing" >> worker-err.log; exit 1; }
     /usr/sbin/nginx -s reload
 else
   echo "$(date) We never became ready to replace nginx config for ${domain} on port ${hostport}" >> worker-err.log
