@@ -12,7 +12,11 @@ inspect_dir = '/inspects'
 
 logging.basicConfig(filename='/worker-err.log', filemode='a', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-c = Client(base_url='unix://var/run/docker.sock')
+api_version = os.environ.get('DOCKER_API_VERSION', None)
+if api_version:
+    c = Client(base_url='unix://var/run/docker.sock', version=api_version)
+else:
+    c = Client(base_url='unix://var/run/docker.sock')
 
 try:
     os.mkdir(inspect_dir)
@@ -25,6 +29,8 @@ def handler(docker_id, status):
         # When we are triggered by newly downloaded images, the docker_id will be the full image-path
         # instead of an uniq ID we can inspect. Bail out, so we wont crash..
         return
+    ignored_runners = os.environ.get('IGNORED_ACT_RUNNERS', '').split()
+    allowed_runners = os.environ.get('ALLOWED_ACT_RUNNERS', '').split()
     procs = []
     inspect = c.inspect_container(docker_id)
     valid_events = [e for e in inspect['Config']['Env'] if e.startswith('ACT_')]
@@ -34,6 +40,11 @@ def handler(docker_id, status):
         key, value = e.replace('ACT_', '').split('=')
         runner_file = '{}/{}'.format(runner_dir, key)
         if os.path.isfile(runner_file):
+            if key in ignored_runners:
+                continue
+            if allowed_runners != []:
+                if not key in allowed_runners:
+                    continue
             inspect_file = '{}/{}_{}.json'.format(inspect_dir, docker_id, status)
             with open(inspect_file, 'w') as fp:
                 fp.write(json.dumps(inspect, indent=2))

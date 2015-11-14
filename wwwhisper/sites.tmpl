@@ -27,8 +27,8 @@ location /{{ $protectpath }}/ {
     {{ end }}
   {{ end }}
 
-  {{ if (exists (printf "/sites.d/%s" $host)) }}
-    include {{ printf "/sites.d/%s" $host }};
+  {{ if (exists (printf "/sites.d/%s" $protectpath)) }}
+    include {{ printf "/sites.d/%s" $protectpath }};
   {{ else if (exists "/sites.default") }}
     include /sites.default;
   {{ end }}
