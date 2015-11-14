@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [[ ${DOCKER_DEBUG} ]]; then
+  set -x
+fi
+
+# PID, trap, wait; all belongs to 'docker stop' signal handeling.
+# This is the same logic as the parent docker container, but either this,
+# or creating a one-time process in supervisord to handle this logic.
+PID=; trap '[[ ${PID} ]] && kill ${PID}; exit 0' SIGTERM
+/usr/bin/supervisord -n -c /etc/supervisord.conf -e ${LOGLEVEL:-error} & PID=$!
+
+# We need to wait for supervisord to start up, or we will get an error soon
+# when we are trying to start up services below. supervisord startup delay isnt
+# in effect since we are sending it to the backround..
+echo -n "Waiting for supervisord to start"
+
+# This one time, they moved the default location away from where it was.
+# And supervisorctl doesnt return a good exit-code. We are trying to be robust..
+supervisord_config=$(cat /etc/supervisord.conf | grep -oE "^file=[^ ]+" | awk -F= '{print $2}')
+if [[ ! "${supervisord_config}" ]]; then
+  supervisord_config="/run/supervisor/supervisor.sock"
+fi
+while [[ ! -e ${supervisord_config} ]]; do echo -n "."; sleep 0.1; done
+echo " OK"
+
+case ${RUNMODE:-timer} in
+  timer)
+    supervisorctl start timer
+    ;;
+  inotify)
+    supervisorctl start inotify
+    ;;
+  *)
+    echo "Valid RUNMODE's are 'timer' or 'inotify'"
+    exit 2
+    ;;
+esac
+
+wait
+

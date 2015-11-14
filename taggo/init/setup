@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ ! -d /data ]]; then
+  echo "/data needs to be mounted."
+  exit 1
+fi
+
+rm -f /taggo/taggo.cfg
+
+if [[ -f /taggo.cfg ]]; then
+  echo "Uning mounted /taggo.cfg as config"
+  ln -s /taggo.cfg /taggo/taggo.cfg
+elif [[ -f /data/taggo.cfg ]]; then
+  echo "Using /data/taggo.cfg existing config"
+  ln -s /data/taggo.cfg /taggo/taggo.cfg
+else
+  echo "Falling back on a default taggo.cfg, it uses the mounted /data as data, and its ./_tags to store tags"
+  ln -s /taggo-default.cfg /taggo/taggo.cfg
+fi
