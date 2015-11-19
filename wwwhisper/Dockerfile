@@ -1,4 +1,4 @@
-FROM xeor/base-centos-daemon
+FROM xeor/base:7.1-2
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV DEPENDING_ENVIRONMENT_VARS SITE_URL ADMIN_MAIL
