@@ -1,4 +1,4 @@
-FROM xeor/base-centos-daemon
+FROM xeor/base:7.1-2
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2015-11-13
@@ -7,6 +7,8 @@ ENV REFRESHED_AT 2015-11-13
 ENV PYTHONIOENCODING utf-8
 
 COPY init/ /init/
+COPY hooks/ /hooks/
+RUN chmod +x /hooks/*
 COPY supervisord.d/ /etc/supervisord.d/
 
 # Taggo

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+case ${RUNMODE:-timer} in
+  timer)
+    supervisorctl start timer
+    ;;
+  inotify)
+    supervisorctl start inotify
+    ;;
+  *)
+    echo "Valid RUNMODE's are 'timer' or 'inotify'"
+    exit 2
+    ;;
+esac
