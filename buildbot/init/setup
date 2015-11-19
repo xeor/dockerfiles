@@ -5,6 +5,9 @@ if ! ls /data &> /dev/null; then
   exit 1
 fi
 
+# We didnt exit cleanly.
+rm -f /data/buildbot/twistd.pid &> /dev/null
+
 if ! ls /data/buildbot &> /dev/null; then
   if [[ ${IS_MASTER} ]]; then
     echo "Creating buildbot master"

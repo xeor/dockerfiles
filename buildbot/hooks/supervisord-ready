@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [[ ${IS_MASTER} ]]; then
+  echo "Starting buildbot master"
+  supervisorctl start buildbot-master
+else
+  echo "Starting buildbot slave"
+  supervisorctl start buildbot-slave
+fi
+
