@@ -8,7 +8,7 @@ RUN yum update -y && \
         freetype-devel libpng-devel \
         git mercurial \
         tar unzip make \
-        postgresql && \
+        postgresql \
         lsof net-tools nmap && \
       yum clean all
 
