@@ -1,4 +1,4 @@
-FROM xeor/base-centos
+FROM xeor/base
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2015-03-18
@@ -9,6 +9,7 @@ RUN yum update -y && \
         git mercurial \
         tar unzip make \
         postgresql && \
+        lsof net-tools nmap && \
       yum clean all
 
 # Python stuff
