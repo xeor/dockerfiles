@@ -1,4 +1,4 @@
-FROM xeor/base:7.1-3
+FROM xeor/base:7.1-4
 
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2015-03-18
