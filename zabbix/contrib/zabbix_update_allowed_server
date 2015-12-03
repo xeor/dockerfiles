@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# This is a small little script you can put in crontab so that the "Server" entry in the agent config
+# will match the one that is currently in use in Docker. This is only usefull if you want to run Zabbix
+# in a Docker container on a host you also want to run an agent on. The "Server" entry needs to match
+# the internal IP that Docker uses. The rest of the configuration is just the same as any other node on
+# your network...
+
+# Something like;
+# echo '*/5  *  *  *  * root /usr/local/bin/zabbix_update_allowed_server' >> /etc/crontab
+
+set -eu
+
+config="/etc/zabbix/zabbix_agentd.conf"
+
+docker_id=$(docker ps --format "{{.ID}}  {{.Ports}}" | grep 0.0.0.0:10051 | awk '{print $1}')
+[[ ${docker_id} ]] || exit 1
+
+ip=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" ${docker_id})
+[[ ${ip} ]] || exit 2
+
+grep -q ${ip} ${config} && exit 3
+
+sed "s/\(^Server=\).*/\1${ip}/" -i ${config}
+echo "Zabbix server ip have changed to $ip"
+
+systemctl restart zabbix-agent

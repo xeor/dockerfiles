@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/usr/sbin/zabbix_server_pgsql
+
