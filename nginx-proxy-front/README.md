@@ -33,3 +33,4 @@ If you want to generate a strong dhparam, place it in `/domains/dhparams.pem`, l
 
 # todo
 * Replace the nginx config template with a python template instead of ugly sed -e hacks
+* autoupdate of letsencrypt certs
