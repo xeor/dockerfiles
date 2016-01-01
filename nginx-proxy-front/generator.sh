@@ -28,7 +28,7 @@ for i in $(ls  /domains); do
   fi
 
   if [[ -e "/domains/dhparams.pem" ]]; then
-    dhparams="ssl_dhparam /domains/dhparams.pem"
+    dhparams="ssl_dhparam /domains/dhparams.pem;"
   else
     dhparams=""
   fi
