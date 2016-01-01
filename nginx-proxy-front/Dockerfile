@@ -4,7 +4,7 @@ MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2016-01-01
 
 RUN yum upgrade -y && yum install -y nginx git && yum clean all && \
-    git clone https://github.com/letsencrypt/letsencrypt && cd /letcencrypt && ./letsencrypt-auto
+    git clone https://github.com/letsencrypt/letsencrypt /letsencrypt && cd /letsencrypt && ./letsencrypt-auto
 
 COPY hooks/ /hooks/
 COPY supervisord.d/ /etc/supervisord.d/
