@@ -12,7 +12,17 @@ server {
         proxy_buffering off;
         error_log /proc/self/fd/2;
         access_log /proc/self/fd/1;
-        return 301 https://$host$request_uri;
+
+
+        location '/.well-known/acme-challenge' {
+                default_type "text/plain";
+                root /domains/__FOLDER__/letsencrypt;
+        }
+
+
+        location / {
+                return 301 https://$host$request_uri;
+        }
 }
 
 server {
@@ -47,6 +57,11 @@ server {
         #resolver_timeout 5s;
 
         underscores_in_headers on;
+
+        location '/.well-known/acme-challenge' {
+                default_type "text/plain";
+                root /domains/__FOLDER__/acme;
+        }
 
         location / {
                 proxy_pass http://__DOMAIN__;
