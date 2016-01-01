@@ -16,7 +16,7 @@ server {
 
         location '/.well-known/acme-challenge' {
                 default_type "text/plain";
-                root /domains/__FOLDER__/letsencrypt;
+                root /domains/__FOLDER__/acme;
         }
 
 
@@ -48,6 +48,8 @@ server {
         ssl_session_tickets off;
         ssl_stapling on;
         ssl_stapling_verify on;
+
+        __DHPARAMS__
 
         # Even if included in cipherli.st, we are restricting our "default" too much. This is up to the servers below.
         #add_header X-Frame-Options DENY;

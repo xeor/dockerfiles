@@ -23,3 +23,13 @@ The container watches this folder, so if you add a domain, it will be included w
     * https://cheapsslsecurity.com/blog/install-ssl-certificate-nginx-http-server/
   * Use the `server.crt` file with the `server.key` file in your `domains` folder.
 * self-signed (testing): `openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.pem -days 3650 -nodes`
+* letsencrypt
+  * Letsencrypt is installed, so all you need to do is make sure that `/etc/letsencrypt` is mounted and persitent and;
+  * Go into the container, run something like `/letsencrypt/letsencrypt-auto certonly --webroot -w /domains/your.domain_127.0.1.1/acme -d your.domain`
+  * Replace the cert files in /domains/your.domain_127.0.1.1/*.* with symlinks to matching certs in /etc/letsencrypt/live/... fullchain.pem to server.pem and privkey.pem to server.key
+
+## dhparams
+If you want to generate a strong dhparam, place it in `/domains/dhparams.pem`, like `openssl dhparam -out /domains/dhparams.pem 2048` and we will use it..
+
+# todo
+* Replace the nginx config template with a python template instead of ugly sed -e hacks

@@ -27,11 +27,17 @@ for i in $(ls  /domains); do
     server_name=${domain}
   fi
 
+  if [[ -e "/domains/dhparams.pem" ]]; then
+    dhparams="ssl_dhparam /domains/dhparams.pem"
+  else
+    dhparams=""
+  fi
+
   # In case we to replace the whole thing
   if [[ -e "/domains/${i}/nginx.conf" ]]; then
     cat /domains/${i}/nginx.conf >> "${tmpfile}"
   else
-    cat /nginx.tmpl | sed -e "s@__FOLDER__@${i}@g" -e "s@__CERTTYPE__@${certtype}@g" -e "s@__REMOTE__@${remote}@g" -e "s@__SERVER_NAME__@${server_name}@g" -e "s@__DOMAIN__@${domain}@g" -e "s@__NGINX_EXTRA__@${nginx_extra}@g" >> "${tmpfile}"
+    cat /nginx.tmpl | sed -e "s@__FOLDER__@${i}@g" -e "s@__CERTTYPE__@${certtype}@g" -e "s@__REMOTE__@${remote}@g" -e "s@__SERVER_NAME__@${server_name}@g" -e "s@__DOMAIN__@${domain}@g" -e "s@__NGINX_EXTRA__@${nginx_extra}@g" -e "s@__DHPARAMS__@${dhparams}@g" >> "${tmpfile}"
   fi
 done
 
