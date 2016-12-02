@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv sh
+
+[[ -d "/var/run/sshd" ]] || (mkdir -p /var/run/sshd)
+[[ -d "/etc/ssh/hostkeys" ]] || (mkdir /etc/ssh/hostkeys)
+
+for keytype in rsa dsa ecdsa ed25519; do
+  [[ -f "/etc/ssh/hostkeys/${keytype}_key" ]] || (ssh-keygen -f /etc/ssh/hostkeys/${keytype}_key -N '' -t ${keytype})
+  [[ -f "/etc/ssh/ssh_host_${keytype}_key" ]] || (ln -s /etc/ssh/hostkeys/${keytype}_key /etc/ssh/ssh_host_${keytype}_key)
+  [[ -f "/etc/ssh/ssh_host_${keytype}_key.pub" ]] || (ln -s /etc/ssh/hostkeys/${keytype}_key.pub /etc/ssh/ssh_host_${keytype}_key.pub)
+done
+

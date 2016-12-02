@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  borgbackup:
+    build: .
+    volumes:
+      - ./data/data:/data
+      - ./data/root:/root
+      - ./data/etc-ssh-hostkeys:/etc/ssh/hostkeys
+    ports:
+      - "2222:22"
