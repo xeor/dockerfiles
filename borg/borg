@@ -1,0 +1,22 @@
+#!/bin/bash
+
+mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
+borgconfig=${HOME}/.config/borg
+extradockerconfig=$(echo $(cat ${borgconfig}/docker-client.conf 2> /dev/null))
+
+if [[ -z ${extradockerconfig} ]]; then
+  echo "You need to provide docker options for volume mounting in '${borgconfig}/docker-client.conf'"
+  echo "At least you need something like '-v /your/folder:/data/folder', so we can take backup of it."
+  echo "1 config per line is fine. You can also add -e or other needed options you need in borg."
+  exit 1
+fi
+
+if [[ -f ${mydir}/Dockerfile ]]; then
+  image=$(docker build -q ${mydir})
+else
+  image="xeor/borg"
+fi
+
+set -x
+docker run -it --rm --entrypoint=/usr/bin/borg -v ${borgconfig}:/root/.config/borg ${extradockerconfig} ${image} $@
+
