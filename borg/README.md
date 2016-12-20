@@ -63,5 +63,11 @@ borg create -v -s -p "ssh://root@10.1.2.3/data/desktop::{hostname}-big-{now:%Y-%
  /Users/username /private/etc/
 ```
 
+## FAQ
+
+### Why are there no VOLUME defined
+Docker tries to set permissions on them, and it might not be able to do that in some circumstances.
+At least that was the case with nfs volumes on 2016-12-20.
+
 ## TODO
 *   Use a `backup` user inside the container, not `root`

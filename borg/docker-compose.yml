@@ -5,6 +5,11 @@ services:
     build: .
     volumes:
       - ./data/data:/data
+
+      # Or create one using docker volume, example for nfs
+      # docker volume create --driver local --opt type=nfs --opt o=addr=10.0.1.1,rw --opt device=:/docker/backup --name nfs.backup
+      # - nfs.backup:/data 
+
       - ./data/root:/root
       - ./data/etc-ssh-hostkeys:/etc/ssh/hostkeys
     ports:

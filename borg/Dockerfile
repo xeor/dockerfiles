@@ -2,7 +2,6 @@ FROM xeor/base-alpine
 MAINTAINER Lars Solberg <lars.solberg@gmail.com>
 ENV REFRESHED_AT 2016-11-20
 EXPOSE 22
-VOLUME ["/data", "/root", "/etc/ssh/hostkeys"]
 
 # Using py3-msgpack@edge instead of pip install msgpack because the PiPY version
 # is not optimized (it's pure python).
