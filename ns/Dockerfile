@@ -1,11 +1,8 @@
-FROM xeor/base-centos-daemon
+FROM xeor/base-alpine
 
-MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2014-10-03
+ENV REFRESHED_AT 2017-03-01
 
-# inotify-tools isnt in epel stable yet... (2014-10-03)
-RUN yum install -y --enablerepo=epel-testing dnsmasq inotify-tools
+RUN apk update \
+    && apk add dnsmasq inotify-tools
 
-COPY supervisord.d/ /etc/supervisord.d/
-
-ADD dnsmasq.conf /etc/dnsmasq.conf
+COPY root /

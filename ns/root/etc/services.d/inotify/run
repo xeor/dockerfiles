@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+while inotifywait -e close_write -r /etc/dnsmasq.d/; do
+  s6-svc -t /services/dnsmasq/
+done
