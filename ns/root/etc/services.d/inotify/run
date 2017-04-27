@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv sh
 
-while inotifywait -e close_write -r /etc/dnsmasq.d/; do
-  s6-svc -t /services/dnsmasq/
-done
+/usr/bin/k8-inotify-reload "/etc/dnsmasq.d/" "s6-svc -t /services/dnsmasq/"
+
