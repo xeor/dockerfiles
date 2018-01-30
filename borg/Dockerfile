@@ -7,8 +7,8 @@ EXPOSE 22
 # is not optimized (it's pure python).
 
 RUN apk update \
-    && apk add --no-cache fuse libacl libattr lz4 openssl pkgconfig python3 openssh py3-msgpack \
-    && apk add --no-cache --virtual .build-deps acl-dev attr-dev fuse-dev gcc lz4-dev musl-dev openssl-dev python3-dev linux-headers \
+    && apk add --no-cache fuse libacl libattr lz4 openssl pkgconfig python3 openssh py3-msgpack lz4-dev \
+    && apk add --no-cache --virtual .build-deps acl-dev attr-dev fuse-dev gcc musl-dev openssl-dev python3-dev linux-headers \
     && pip3 install borgbackup llfuse \
     && apk del .build-deps \
     && rm -f /etc/ssh/ssh_host_*
