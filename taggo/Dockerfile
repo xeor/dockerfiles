@@ -1,18 +1,12 @@
-FROM xeor/base:7.1-4
+FROM xeor/base-alpine:0.4
 
-MAINTAINER Lars Solberg <lars.solberg@gmail.com>
-ENV REFRESHED_AT 2015-11-13
+LABEL maintainer="Lars Solberg <lars.solberg@gmail.com>"
 
-# Force python3's stdin/stdout encoding to be utf-8, instead of guessing..
-ENV PYTHONIOENCODING utf-8
+ENV REFRESHED_AT="2018-02-18" \
+    PYTHONIOENCODING="utf-8"
 
-COPY init/ /init/
-COPY hooks/ /hooks/
-RUN chmod +x /hooks/*
-COPY supervisord.d/ /etc/supervisord.d/
+RUN apk add --no-cache python3 \
+    && pip3 install taggo
 
-# Taggo
-RUN yum install -y git inotify-tools && \
-    git clone https://github.com/xeor/taggo.git && \
-    yum clean all
-COPY taggo-default.cfg /taggo-default.cfg
+COPY root /
+

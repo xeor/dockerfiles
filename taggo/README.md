@@ -1,13 +1,9 @@
-A simple container that uses `taggo` on a mounted volume and config
+This uses the upstream taggo pip package but got some additional niceness to it when it comes to automatic runs..
+See https://taggo.readthedocs.io/en/latest/
 
-Note that the folder to store the tags in must exists as well
+Start the container with environment variables like `CRON_TAGGO_0` with the format `* * * * *|run ....`
 
-# mountpoints
-* `/data`: Must be mounted where the files should be
-* `/taggo.cfg`: Custom mounted, if it doesnt exist, `/data/taggo.cfg` is used, if that doesnt exist, we use a default one (see code).
-
-# variables
-* `RUNMODE`: set to one of
-  * `inotify`: watch all files in `/data`, or `TAGGO_WATCH` for changes
-  * `timer` (default) timermode (every 1 minute, or `TAGGO_INTERVAL` seconds)
+  * CRON_TAGGO_n where n is a number, start at 0, have as many as you want.
+  * We take care automaticly that only 1 of each number is running at a time. Example, if one of your job is running every minute and it takes more than a minute to finish. It wont start the 2nd time.
+  * The environment variable is split in 2 by a `|`. The first param is a cron, the 2nd is the parameters sent to the `taggo` command.
 
